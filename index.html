@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Salup Ghimire | Python Learner & Front-End Developer</title>
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- SEO & Meta Tags -->
+  <meta name="description" content="Portfolio of Salup Ghimire - Grade 12 student and growing developer specializing in Python foundations and Front-End engineering.">
+  <meta name="keywords" content="Salup Ghimire, Salup, Ghimire, Python Developer, Front-End Developer Nepal, Web Developer Nepal, Chess">
+  <meta name="author" content="Salup Ghimire">
+
+  <!-- Open Graph Previews -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://github.com/salupghimire">
+  <meta property="og:title" content="Salup Ghimire | Portfolio">
+  <meta property="og:description" content="Explore Python and Front-End projects built by Salup Ghimire.">
+  <meta property="og:image" content="https://via.placeholder.com/1200x630/0b1220/06b6d4?text=Salup+Ghimire">
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader" role="status" aria-live="polite">
+    <div class="loader-content">
+      <div class="loader-ring"></div>
+      <h2 class="loader-text">Salup Ghimire</h2>
+    </div>
+  </div>
+
+  <!-- ACCESSIBILITY: Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- CURSOR -->
+  <div class="cursor"></div>
+  <div class="cursor-follower"></div>
+
+  <!-- STICKY HEADER & NAV -->
+  <header class="main-header">
+    <nav class="nav">
+      <div class="logo">
+        <div class="logo-mark">S</div>
+        <span class="logo-text">Salup Ghimire</span>
+      </div>
+
+      <div class="nav-desktop">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#timeline">Journey</a>
+        <a href="#projects">Projects</a>
+        <a href="#chess">Chess</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div class="nav-actions">
+        <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Theme">☀️</button>
+        <button class="nav-toggle" onclick="toggleMenu()" aria-label="Open Mobile Menu">☰</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MOBILE OVERLAY NAV -->
+  <div id="mobileNav" class="mobile-nav" aria-hidden="true">
+    <a href="#about" onclick="toggleMenu()">About</a>
+    <a href="#skills" onclick="toggleMenu()">Skills</a>
+    <a href="#timeline" onclick="toggleMenu()">Journey</a>
+    <a href="#projects" onclick="toggleMenu()">Projects</a>
+    <a href="#chess" onclick="toggleMenu()">Chess</a>
+    <a href="#contact" onclick="toggleMenu()">Contact</a>
+  </div>
+
+  <main id="main-content">
+    <!-- HERO -->
+    <section class="hero">
+      <img src="salup.jpg" alt="Salup Ghimire Portrait" class="profile-photo"> 
+      <h1 class="title">Salup Ghimire</h1>
+      <h3><span id="typing"></span></h3>
+      <p class="bio">
+        Grade 12 student from Nepal focusing on web development fundamentals and building growing familiarity with Python frameworks.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn">View Projects</a>
+        <a href="#" class="btn secondary" download="Salup_Ghimire_Resume.pdf">Download CV</a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <h2>About Me</h2>
+      <p>I am a student working on translating theoretical concepts into clean code layouts. I prioritize steady technical skill development through structured documentation, coding practice, and open-source explorations.</p>
+    </section>
+
+    <!-- SKILLS (UI/UX Removed) -->
+    <section id="skills" class="section">
+      <h2>Skills & Technologies</h2>
+      <div class="grid">
+        <div class="card"><p>Front-End Engineering (HTML/CSS/JS)</p></div>
+        <div class="card"><p>Python Foundations</p></div>
+        <div class="card"><p>Analytical Logic & Chess Strategy</p></div>
+      </div>
+    </section>
+
+    <!-- TIMELINE (Python Description Improved for Accuracy) -->
+    <section id="timeline" class="section">
+      <h2>Education & Journey</h2>
+      <div class="timeline-container">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024 - 2026</div>
+          <div class="timeline-content">
+            <h3>High School Studies (Grade 11-12)</h3>
+            <p>Pursuing science and technology tracks in Nepal, balancing school requirements with self-directed software development exploration.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-date">2024 - Present</div>
+          <div class="timeline-content">
+            <h3>Exploring Python & Logic Foundations</h3>
+            <p>Diving into core programming concepts. Actively learning structural flow, standard libraries and python concepts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS (Upgraded to a structured layout) -->
+    <section id="projects" class="section">
+      <h2>Featured Work</h2>
+      <div class="grid production-grid">
+        <div class="card project-card">
+          <h3>Personal Portfolio</h3>
+          <p>A responsive, accessible portfolio template styled completely with CSS custom properties and interactive theme toggling features.</p>
+          <a class="project-link" href="https://github.com/salupghimire" target="_blank" rel="noopener noreferrer">View Repository →</a>
+        </div>
+        <div class="card project-card">
+          <h3>Python Core Scripts</h3>
+          <p>A compilation of logic scripts, terminal automation tasks, and foundational algorithm tests built during my coding practice.</p>
+          <a class="project-link" href="https://github.com/salupghimire" target="_blank" rel="noopener noreferrer">View Repository →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHESS -->
+    <section id="chess" class="section">
+      <h2>Chess Matrix</h2>
+      <div class="card single-card">
+        <h3>Tactical Engine Profiles</h3>
+        <p>Using real-time calculations, pattern tracking, and tactical positional structures to train analytical and decision-making systems under strict time settings.</p>
+        <br>
+        <a class="btn" href="https://www.chess.com/member/salup_ghimire" target="_blank" rel="noopener noreferrer">Analyze Rating Profile</a>
+      </div>
+    </section>
+
+    <!-- CONTACT (Responsive Layout with Updated Email Info) -->
+    <section id="contact" class="section">
+      <h2>Get In Touch</h2>
+      <div class="contact-layout">
+        <!-- Secure Contact Form Pipeline -->
+        <form class="contact-form" action="https://formspree.io/f/your-form-id" method="POST">
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required placeholder="john@example.com">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Let's build something epic..."></textarea>
+          </div>
+          <button type="submit" class="btn">Send Secure Message</button>
+        </form>
+
+        <!-- Fully Responsive Target Channels Area -->
+        <div class="contact-channels">
+          <a href="mailto:salupghimire10@gmail.com" class="contact-card">
+            <span class="channel-title">Direct Email</span>
+            <span class="channel-detail">salupghimire10@gmail.com</span>
+          </a>
+          <a href="https://github.com/salupghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
+            <span class="channel-title">GitHub Channels</span>
+            <span class="channel-detail">@salupghimire</span>
+          </a>
+          <a href="https://x.com/SalupGhimire32" class="contact-card" target="_blank" rel="noopener noreferrer">
+            <span class="channel-title">X / Twitter</span>
+            <span class="channel-detail">@SalupGhimire32</span>
+          </a>
+          <a href="https://facebook.com/salup.ghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
+            <span class="channel-title">Meta Facebook</span>
+            <span class="channel-detail">Salup Ghimire</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Salup Ghimire. Designed for modern performance. All Rights Reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

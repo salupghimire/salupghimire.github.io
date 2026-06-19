@@ -1,0 +1,303 @@
+/* =====================
+   CSS DESIGN VARIABLES 
+===================== */
+:root {
+  --bg-main: #0b1220;
+  --bg-card: #111a2e;
+  --bg-input: #1e293b;
+  --text-primary: #e5e7eb;
+  --text-secondary: #94a3b8;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  
+  /* Accent Elements */
+  --accent-cyan: #06b6d4;
+  --accent-blue: #3b82f6;
+  --accent-teal: #0ea5e9;
+  --accent-dark: #0284c7;
+  --text-btn-fallback: #0b1220;
+}
+
+/* Light Theme Variables */
+body.light-theme {
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-input: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --accent-cyan: #0891b2;
+  --accent-blue: #2563eb;
+  --accent-teal: #0284c7;
+  --text-btn-fallback: #ffffff;
+}
+
+/* =====================
+   BASE SYSTEM
+===================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Accessibility Keyboard Focus Frameworks */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 20px;
+  background: var(--accent-cyan);
+  color: var(--text-btn-fallback);
+  padding: 10px 20px;
+  z-index: 10000;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: top 0.2s ease;
+}
+.skip-link:focus { top: 20px; }
+
+*:focus-visible {
+  outline: 3px dashed var(--accent-cyan);
+  outline-offset: 4px;
+}
+
+/* =====================
+   LOADER WINDOW
+===================== */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.loader-content { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.loader-ring {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top: 3px solid var(--accent-cyan);
+  border-right: 3px solid var(--accent-blue);
+  animation: spin 1s linear infinite;
+}
+.loader-text {
+  font-size: 1.2rem;
+  color: var(--accent-cyan);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =====================
+   CUSTOM INTERACTION CURSOR
+===================== */
+.cursor { width: 8px; height: 8px; background: var(--accent-cyan); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; }
+.cursor-follower { width: 26px; height: 26px; border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 50%; position: fixed; pointer-events: none; transition: 0.08s ease-out; z-index: 9997; }
+@media (pointer: coarse) { .cursor, .cursor-follower { display: none !important; } }
+
+/* =====================
+   FIXED STICKY HEADER PIPELINE
+===================== */
+.main-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: var(--bg-main);
+  opacity: 0.98;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2000;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 5%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-mark { width: 34px; height: 34px; border: 1px solid var(--accent-cyan); border-radius: 8px; display: flex; justify-content: center; align-items: center; color: var(--accent-cyan); font-weight: bold; }
+.logo-text { font-weight: 600; font-size: 1.05rem; }
+
+.nav-desktop { display: flex; gap: 24px; }
+.nav-desktop a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  position: relative;
+}
+.nav-desktop a:hover { color: var(--accent-cyan); }
+.nav-desktop a::after { content: ""; position: absolute; left: 0; bottom: -4px; width: 0%; height: 2px; background: var(--accent-cyan); transition: width 0.2s ease; }
+.nav-desktop a:hover::after { width: 100%; }
+
+.nav-actions { display: flex; align-items: center; gap: 16px; }
+.theme-toggle-btn { background: none; border: none; font-size: 1.25rem; cursor: pointer; border-radius: 50%; padding: 4px; }
+.nav-toggle { display: none; font-size: 26px; background: none; border: none; color: var(--text-primary); cursor: pointer; }
+
+/* Mobile Navigation Console */
+.mobile-nav {
+  position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100%;
+  background: var(--bg-card); display: flex; flex-direction: column; padding: 100px 24px;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 1500;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
+}
+.mobile-nav.active { right: 0; }
+.mobile-nav a { padding: 14px 18px; color: var(--text-primary); text-decoration: none; font-size: 1.1rem; display: block; border-radius: 8px; margin-bottom: 8px; }
+.mobile-nav a:hover { background: rgba(6, 182, 212, 0.08); color: var(--accent-cyan); }
+
+/* =====================
+   HERO LAYER MODULE
+===================== */
+.hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 18px; padding: 40px 24px; }
+.profile-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); margin-bottom: 8px; }
+.title { font-size: 3.4rem; letter-spacing: -1px; }
+.bio { max-width: 600px; color: var(--text-secondary); line-height: 1.6; font-size: 1.05rem; }
+.hero-actions { display: flex; gap: 14px; margin-top: 12px; }
+
+/* Interaction Engines */
+.btn { padding: 12px 24px; background: var(--accent-cyan); color: var(--text-btn-fallback); font-weight: 600; text-decoration: none; border-radius: 8px; transition: all 0.2s ease; border: none; cursor: pointer; display: inline-block; font-size: 0.95rem; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(6, 182, 212, 0.2); }
+.btn.secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--text-secondary); }
+.btn.secondary:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--text-primary); }
+
+/* =====================
+   SECTIONS & REVISION GRIDS
+===================== */
+.section { padding: 80px 24px; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; opacity: 0; transform: translateY(20px); }
+.section.active { animation: revealSection 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes revealSection { to { opacity: 1; transform: translateY(0); } }
+
+.section h2 { font-size: 2rem; }
+.section h2::after { content: ""; display: block; width: 40px; height: 3px; background: var(--accent-cyan); margin-top: 8px; border-radius: 2px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; width: 100%; }
+.card { background: var(--bg-card); padding: 24px; border-radius: 12px; border: 1px solid var(--border-subtle); transition: all 0.25s ease; }
+.card:hover { transform: translateY(-4px); border-color: var(--accent-cyan); }
+
+/* Individual Custom Project Card Designs */
+.project-card { display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+.project-card h3 { font-size: 1.25rem; color: var(--text-primary); }
+.project-card p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; }
+.project-link { color: var(--accent-cyan); text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: opacity 0.2s; }
+.project-link:hover { opacity: 0.8; }
+.single-card { max-width: 500px; }
+
+/* =====================
+   JOURNEY TIMELINE
+===================== */
+.timeline-container { position: relative; border-left: 2px solid var(--border-subtle); padding-left: 24px; margin-left: 8px; }
+.timeline-item { position: relative; margin-bottom: 32px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-dot { position: absolute; left: -31px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
+.timeline-date { font-size: 0.85rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 4px; }
+.timeline-content h3 { font-size: 1.2rem; margin-bottom: 4px; }
+.timeline-content p { color: var(--text-secondary); line-height: 1.5; font-size: 0.95rem; }
+
+/* =====================
+   RESPONSIVE CONTACT ENGINE
+===================== */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+  width: 100%;
+  align-items: start;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg-card);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+}
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 0.85rem; font-weight: 600; }
+.form-group input, .form-group textarea {
+  padding: 12px; background: var(--bg-input); border: 1px solid var(--border-subtle);
+  border-radius: 6px; color: var(--text-primary); font-size: 0.95rem; transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group textarea:focus { border-color: var(--accent-cyan); outline: none; }
+
+/* Responsive Grid Link Channels block */
+.contact-channels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  width: 100%;
+}
+.contact-channels .contact-card {
+  background: var(--bg-card);
+  padding: 16px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.contact-channels .contact-card:hover {
+  transform: translateX(4px);
+  border-color: var(--accent-cyan);
+}
+.channel-title { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.channel-detail { font-size: 0.95rem; color: var(--text-primary); font-weight: 600; word-break: break-all; }
+
+/* =====================
+   SYSTEM FOOTER
+===================== */
+footer { text-align: center; padding: 40px 24px; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid var(--border-subtle); margin-top: 40px; }
+
+/* Custom Track Control Scrollbars */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 4px; }
+
+/* =====================
+   RESPONSIVE DESIGN SYSTEM MEDIA BREAKPOINTS
+===================== */
+@media (max-width: 860px) {
+  .contact-layout {
+    grid-template-columns: 1fr; /* Stacks components cleanly on medium/tablet viewports */
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-desktop { display: none; }
+  .nav-toggle { display: block; }
+  .title { font-size: 2.5rem; }
+  .hero { min-height: 70vh; }
+  .contact-channels {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Sub-grid adapts fluidly to mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-actions { flex-direction: column; width: 100%; max-width: 260px; }
+  .btn { text-align: center; width: 100%; }
+  .contact-channels { grid-template-columns: 1fr; } /* Complete single column configuration on small cellscreens */
+}
