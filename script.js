@@ -1,199 +1,488 @@
+'use strict';
+
 // ==========================================================================
-// CORE UI: Loader & Mobile Menu
+// UTILITIES
+// ==========================================================================
+const EMAIL = 'salupghimire10@gmail.com';
+const CHESS_USER = 'salup_ghimire';
+const GITHUB_USER = 'salupghimire';
+
+let chessRating = '...';
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+function showToast(message) {
+  const toast = $('toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add('show');
+  toast.setAttribute('aria-hidden', 'false');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => {
+    toast.classList.remove('show');
+    toast.setAttribute('aria-hidden', 'true');
+  }, 2500);
+}
+
+function setBodyScrollLocked(locked) {
+  document.body.style.overflow = locked ? 'hidden' : '';
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+// ==========================================================================
+// LOADER & TYPING
 // ==========================================================================
 window.addEventListener('load', () => {
-    const loader = document.getElementById('loader');
-    if (loader) {
-        loader.style.opacity = '0';
-        setTimeout(() => {
-            loader.style.display = 'none';
-            startTyping(); 
-        }, 400);
-    }
+  const loader = $('loader');
+  if (loader) {
+    loader.style.opacity = '0';
+    setTimeout(() => {
+      loader.style.display = 'none';
+      loader.setAttribute('aria-hidden', 'true');
+      startTyping();
+    }, 400);
+  }
+
+  $('year').textContent = new Date().getFullYear();
+  initScrollReveal();
+  initCursorGlow();
+  initCopyButtons();
+  fetchChessRating();
+  fetchGitHubStats();
 });
 
-function toggleMenu() {
-    const nav = document.getElementById('mobileNav');
-    const isHidden = nav.getAttribute('aria-hidden') === 'true';
-    
-    // Toggle state
-    nav.setAttribute('aria-hidden', !isHidden);
-    
-    // Prevent scrolling behind the drawer when it's open
-    document.body.style.overflow = !isHidden ? 'hidden' : 'auto';
-}
-
-// Close menu when a link is clicked
-document.querySelectorAll('.mobile-nav a').forEach(link => {
-    link.addEventListener('click', () => {
-        document.getElementById('mobileNav').setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = 'auto'; 
-    });
-});
-
-// ==========================================================================
-// THEME TOGGLE
-// ==========================================================================
-const themeToggle = document.getElementById('themeToggle');
-if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
-    });
-}
-
-// ==========================================================================
-// TYPING EFFECT
-// ==========================================================================
-const typingSpan = document.getElementById("typing");
-const words = ["Front-End Developer.", "Python Enthusiast.", "Chess Strategist."];
+const typingSpan = $('typing');
+const words = ['Front-End Developer.', 'Python Enthusiast.', 'Chess Strategist.'];
 let wordIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
+let typingTimer = null;
 
 function startTyping() {
-    if (!typingSpan) return;
-    const currentWord = words[wordIndex];
-    
-    if (isDeleting) {
-        charIndex--;
-    } else {
-        charIndex++;
-    }
+  if (!typingSpan || prefersReducedMotion()) {
+    if (typingSpan) typingSpan.textContent = words[0];
+    return;
+  }
 
-    typingSpan.textContent = currentWord.substring(0, charIndex) || "\u00A0";
+  const currentWord = words[wordIndex];
+  charIndex += isDeleting ? -1 : 1;
+  typingSpan.textContent = currentWord.substring(0, charIndex) || '\u00A0';
 
-    let typeSpeed = isDeleting ? 50 : 100;
+  let typeSpeed = isDeleting ? 50 : 100;
 
-    if (!isDeleting && charIndex === currentWord.length) {
-        typeSpeed = 2000; 
-        isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        wordIndex = (wordIndex + 1) % words.length;
-        typeSpeed = 500;
-    }
+  if (!isDeleting && charIndex === currentWord.length) {
+    typeSpeed = 2000;
+    isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    isDeleting = false;
+    wordIndex = (wordIndex + 1) % words.length;
+    typeSpeed = 500;
+  }
 
-    setTimeout(startTyping, typeSpeed);
+  typingTimer = setTimeout(startTyping, typeSpeed);
 }
 
 // ==========================================================================
-// FEATURE 1: Scroll Progress Bar
+// MOBILE MENU
+// ==========================================================================
+function closeMobileNav() {
+  const nav = $('mobileNav');
+  const backdrop = $('mobileBackdrop');
+  const toggle = document.querySelector('.nav-toggle');
+  if (nav) nav.setAttribute('aria-hidden', 'true');
+  if (backdrop) backdrop.setAttribute('aria-hidden', 'true');
+  if (toggle) toggle.setAttribute('aria-expanded', 'false');
+  setBodyScrollLocked(false);
+}
+
+function toggleMenu() {
+  const nav = $('mobileNav');
+  const backdrop = $('mobileBackdrop');
+  const toggle = document.querySelector('.nav-toggle');
+  if (!nav) return;
+
+  const isHidden = nav.getAttribute('aria-hidden') !== 'false';
+  const willOpen = isHidden;
+
+  nav.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+  if (backdrop) backdrop.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+  if (toggle) toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+  setBodyScrollLocked(willOpen);
+}
+
+document.querySelectorAll('.mobile-nav a').forEach(link => {
+  link.addEventListener('click', closeMobileNav);
+});
+
+// ==========================================================================
+// THEME
+// ==========================================================================
+const themeToggle = $('themeToggle');
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  if (themeToggle) {
+    themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+    themeToggle.setAttribute('aria-label', `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`);
+  }
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'light' ? 'dark' : 'light');
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', toggleTheme);
+}
+
+applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+
+// ==========================================================================
+// SCROLL PROGRESS
 // ==========================================================================
 window.addEventListener('scroll', () => {
-    const scrollBar = document.getElementById('scroll-progress');
-    if (scrollBar) {
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scrolled = (winScroll / height) * 100;
-        scrollBar.style.width = scrolled + "%";
-    }
+  const scrollBar = $('scroll-progress');
+  if (!scrollBar) return;
+
+  const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+  scrollBar.style.width = scrolled + '%';
+  scrollBar.setAttribute('aria-valuenow', Math.round(scrolled));
 });
 
 // ==========================================================================
-// FEATURE 2: Copy to Clipboard
+// COPY EMAIL & REPO URLS
 // ==========================================================================
 function copyEmail() {
-    navigator.clipboard.writeText("salupghimire10@gmail.com");
-    const detail = document.getElementById("email-detail");
-    if (!detail) return;
-    
-    const originalText = "salupghimire10@gmail.com";
-    detail.innerText = "Copied to clipboard! ✓";
-    detail.style.color = "var(--accent)";
-    
-    setTimeout(() => {
-        detail.innerText = originalText;
-        detail.style.color = "var(--text-main)";
-    }, 2500);
+  navigator.clipboard.writeText(EMAIL).then(() => {
+    showToast('Email copied to clipboard ✓');
+    const detail = $('email-detail');
+    if (detail) {
+      const original = EMAIL;
+      detail.textContent = 'Copied to clipboard! ✓';
+      detail.style.color = 'var(--accent)';
+      setTimeout(() => {
+        detail.textContent = original;
+        detail.style.color = '';
+      }, 2500);
+    }
+  }).catch(() => showToast('Copy failed — select manually'));
+}
+
+function initCopyButtons() {
+  document.querySelectorAll('.repo-copy').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const url = btn.getAttribute('data-copy');
+      if (!url) return;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Clone URL copied ✓');
+      });
+    });
+  });
 }
 
 // ==========================================================================
-// FEATURE 3: Live API Fetch (Chess.com)
+// LIVE APIS
 // ==========================================================================
-fetch('https://api.chess.com/pub/player/salup_ghimire/stats')
-    .then(response => response.json())
+function updateChessRatingUI(rating) {
+  chessRating = rating;
+  ['live-chess-rating', 'live-chess-rating-2'].forEach(id => {
+    const el = $(id);
+    if (el) el.textContent = rating;
+  });
+}
+
+function fetchChessRating() {
+  fetch(`https://api.chess.com/pub/player/${CHESS_USER}/stats`)
+    .then(res => res.json())
     .then(data => {
-        const ratingEl = document.getElementById('live-chess-rating');
-        if (ratingEl && data.chess_rapid && data.chess_rapid.last) {
-            ratingEl.innerText = data.chess_rapid.last.rating;
-        } else if (ratingEl) {
-            ratingEl.innerText = "Data Unavailable";
-        }
+      if (data.chess_rapid?.last?.rating) {
+        updateChessRatingUI(data.chess_rapid.last.rating);
+      } else {
+        updateChessRatingUI('N/A');
+      }
+    })
+    .catch(() => updateChessRatingUI('Offline'));
+}
+
+function fetchGitHubStats() {
+  const el = $('live-github-repos');
+  if (!el) return;
+
+  fetch(`https://api.github.com/users/${GITHUB_USER}`)
+    .then(res => res.json())
+    .then(data => {
+      el.textContent = data.public_repos ?? '—';
     })
     .catch(() => {
-        const ratingEl = document.getElementById('live-chess-rating');
-        if (ratingEl) ratingEl.innerText = "System Offline";
+      el.textContent = '—';
     });
+}
 
 // ==========================================================================
-// FEATURE 4: Hidden Terminal Easter Egg
+// SCROLL REVEAL
+// ==========================================================================
+function initScrollReveal() {
+  if (prefersReducedMotion()) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// ==========================================================================
+// CURSOR GLOW
+// ==========================================================================
+function initCursorGlow() {
+  const glow = $('cursor-glow');
+  if (!glow || prefersReducedMotion()) return;
+
+  window.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+}
+
+// ==========================================================================
+// COMMAND PALETTE
+// ==========================================================================
+const palette = $('command-palette');
+const paletteInput = $('palette-input');
+const paletteList = $('palette-list');
+
+const commands = [
+  { label: 'Go to About', action: () => scrollToSection('#about'), keys: 'about' },
+  { label: 'Go to Skills', action: () => scrollToSection('#skills'), keys: 'skills stack' },
+  { label: 'Go to Projects', action: () => scrollToSection('#projects'), keys: 'projects' },
+  { label: 'Go to Contact', action: () => scrollToSection('#contact'), keys: 'contact' },
+  { label: 'Toggle Theme', action: toggleTheme, keys: 'theme dark light' },
+  { label: 'Copy Email', action: copyEmail, keys: 'email copy' },
+  { label: 'Open GitHub', action: () => window.open(`https://github.com/${GITHUB_USER}`, '_blank'), keys: 'github' },
+  { label: 'Open Terminal', action: openTerminal, keys: 'terminal sudo' },
+];
+
+function scrollToSection(selector) {
+  closeCommandPalette();
+  document.querySelector(selector)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderPaletteItems(filter = '') {
+  if (!paletteList) return;
+  const q = filter.trim().toLowerCase();
+  const filtered = commands.filter(cmd =>
+    cmd.label.toLowerCase().includes(q) || cmd.keys.includes(q)
+  );
+
+  paletteList.innerHTML = filtered.map((cmd, i) =>
+    `<li role="option" data-index="${i}" class="${i === 0 ? 'active' : ''}">${cmd.label}<span>↵</span></li>`
+  ).join('');
+
+  paletteList._filtered = filtered;
+}
+
+function openCommandPalette() {
+  if (!palette || !paletteInput) return;
+  palette.setAttribute('aria-hidden', 'false');
+  paletteInput.value = '';
+  renderPaletteItems();
+  paletteInput.focus();
+  setBodyScrollLocked(true);
+}
+
+function closeCommandPalette() {
+  if (!palette) return;
+  palette.setAttribute('aria-hidden', 'true');
+  setBodyScrollLocked(false);
+}
+
+if ($('cmdHint')) {
+  $('cmdHint').addEventListener('click', openCommandPalette);
+}
+
+if (paletteInput) {
+  paletteInput.addEventListener('input', () => renderPaletteItems(paletteInput.value));
+  paletteInput.addEventListener('keydown', e => {
+    const items = paletteList?.querySelectorAll('li') || [];
+    let active = paletteList?.querySelector('li.active');
+    let index = active ? [...items].indexOf(active) : 0;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      index = Math.min(index + 1, items.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      index = Math.max(index - 1, 0);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const cmd = paletteList?._filtered?.[index];
+      if (cmd) {
+        cmd.action();
+        closeCommandPalette();
+      }
+      return;
+    } else if (e.key === 'Escape') {
+      closeCommandPalette();
+      return;
+    } else {
+      return;
+    }
+
+    items.forEach((li, i) => li.classList.toggle('active', i === index));
+  });
+}
+
+if (paletteList) {
+  paletteList.addEventListener('click', e => {
+    const li = e.target.closest('li');
+    if (!li) return;
+    const index = Number(li.dataset.index);
+    const cmd = paletteList._filtered?.[index];
+    if (cmd) {
+      cmd.action();
+      closeCommandPalette();
+    }
+  });
+}
+
+// ==========================================================================
+// TERMINAL EASTER EGG
 // ==========================================================================
 let keyBuffer = '';
-const terminalOverlay = document.getElementById('terminal-overlay');
-const terminalInput = document.getElementById('terminal-input');
-const terminalOutput = document.getElementById('terminal-output');
+const terminalOverlay = $('terminal-overlay');
+const terminalInput = $('terminal-input');
+const terminalOutput = $('terminal-output');
 
-window.addEventListener('keydown', (e) => {
-    // Global Escape Key to close menus/overlays
-    if (e.key === 'Escape') {
-        const nav = document.getElementById('mobileNav');
-        nav.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = 'auto';
-        closeTerminal();
-    }
+const NEOFETCH_ASCII = `
+  ███████╗ █████╗ ██╗     ██╗   ██╗██████╗ 
+  ██╔════╝██╔══██╗██║     ██║   ██║██╔══██╗
+  ███████╗███████║██║     ██║   ██║██████╔╝
+  ╚════██║██╔══██║██║     ██║   ██║██╔═══╝ 
+  ███████║██║  ██║███████╗╚██████╔╝██║     
+  ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝     
+  OS: salupOS 2.0 · Shell: portfolio-sh
+  Theme: ${document.documentElement.getAttribute('data-theme')}
+  Chess Rapid: ${chessRating}
+  Email: ${EMAIL}
+`.trim();
 
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-    keyBuffer += e.key.toLowerCase();
-    if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-10);
-    
-    if (keyBuffer.includes('sudo')) {
-        terminalOverlay.setAttribute('aria-hidden', 'false');
-        terminalInput.focus();
-        keyBuffer = '';
-        document.body.style.overflow = 'hidden';
-    }
-});
+function openTerminal() {
+  if (!terminalOverlay || !terminalInput) return;
+  terminalOverlay.setAttribute('aria-hidden', 'false');
+  terminalInput.focus();
+  setBodyScrollLocked(true);
+}
 
 function closeTerminal() {
-    if (terminalOverlay) {
-        terminalOverlay.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = 'auto';
-    }
+  if (!terminalOverlay) return;
+  terminalOverlay.setAttribute('aria-hidden', 'true');
+  setBodyScrollLocked(false);
 }
 
-// Handle Terminal Commands
-if (terminalInput) {
-    terminalInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const command = terminalInput.value.trim().toLowerCase();
-            terminalInput.value = '';
-            
-            terminalOutput.innerHTML += `<p><span class="prompt">$</span> ${command}</p>`;
-            
-            switch(command) {
-                case 'help':
-                    terminalOutput.innerHTML += `<p>Available commands: <span class="term-highlight">about</span>, <span class="term-highlight">projects</span>, <span class="term-highlight">clear</span>, <span class="term-highlight">exit</span></p>`;
-                    break;
-                case 'about':
-                    terminalOutput.innerHTML += `<p>Salup Ghimire. Developer, Student, Chess Player. Initializing global takeover...</p>`;
-                    break;
-                case 'projects':
-                    terminalOutput.innerHTML += `<p>Accessing GitHub repository logs... 2 active modules found.</p>`;
-                    break;
-                case 'clear':
-                    terminalOutput.innerHTML = '';
-                    break;
-                case 'exit':
-                    closeTerminal();
-                    break;
-                default:
-                    terminalOutput.innerHTML += `<p>Command not found: ${command}. Type 'help' for available commands.</p>`;
-            }
-            terminalOutput.scrollTop = terminalOutput.scrollHeight;
-        }
-    });
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeMobileNav();
+    closeTerminal();
+    closeCommandPalette();
+    return;
+  }
+
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    const isOpen = palette?.getAttribute('aria-hidden') === 'false';
+    isOpen ? closeCommandPalette() : openCommandPalette();
+    return;
+  }
+
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+  keyBuffer += e.key.toLowerCase();
+  if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-10);
+
+  if (keyBuffer.includes('sudo')) {
+    openTerminal();
+    keyBuffer = '';
+  }
+});
+
+function appendTerminal(html) {
+  if (!terminalOutput) return;
+  terminalOutput.insertAdjacentHTML('beforeend', html);
+  terminalOutput.scrollTop = terminalOutput.scrollHeight;
 }
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+if (terminalInput) {
+  terminalInput.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+
+    const command = terminalInput.value.trim().toLowerCase();
+    terminalInput.value = '';
+    appendTerminal(`<p><span class="prompt">$</span> ${escapeHtml(command)}</p>`);
+
+    switch (command) {
+      case 'help':
+        appendTerminal(`<p>Commands: <span class="term-highlight">about</span>, <span class="term-highlight">projects</span>, <span class="term-highlight">theme</span>, <span class="term-highlight">email</span>, <span class="term-highlight">chess</span>, <span class="term-highlight">neofetch</span>, <span class="term-highlight">clear</span>, <span class="term-highlight">exit</span></p>`);
+        break;
+      case 'about':
+        appendTerminal('<p>Salup Ghimire — Developer, Student, Chess Player.</p>');
+        break;
+      case 'projects':
+        appendTerminal('<p>2 active modules: portfolio-v2, chess-tools</p>');
+        break;
+      case 'theme':
+        toggleTheme();
+        appendTerminal(`<p>Theme switched to ${document.documentElement.getAttribute('data-theme')}.</p>`);
+        break;
+      case 'email':
+        copyEmail();
+        appendTerminal('<p>Email copied to clipboard.</p>');
+        break;
+      case 'chess':
+        appendTerminal(`<p>Rapid rating: ${chessRating}</p>`);
+        break;
+      case 'neofetch':
+        appendTerminal(`<pre class="terminal-ascii">${NEOFETCH_ASCII.replace('${chessRating}', chessRating)}</pre>`);
+        break;
+      case 'clear':
+        terminalOutput.innerHTML = '';
+        break;
+      case 'exit':
+        closeTerminal();
+        break;
+      default:
+        appendTerminal(`<p>Command not found: ${escapeHtml(command)}. Type 'help'.</p>`);
+    }
+  });
+}
+
+// Expose for inline onclick handlers
+window.toggleMenu = toggleMenu;
+window.closeMobileNav = closeMobileNav;
+window.copyEmail = copyEmail;
+window.closeTerminal = closeTerminal;
+window.openCommandPalette = openCommandPalette;
+window.closeCommandPalette = closeCommandPalette;
