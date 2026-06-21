@@ -2,8 +2,14 @@
 window.addEventListener("load", () => {
   setTimeout(() => {
     const loader = document.getElementById("loader");
-    loader.style.opacity = "0";
-    loader.style.visibility = "hidden";
+    if (loader) {
+      loader.style.opacity = "0";
+      loader.style.visibility = "hidden";
+    }
+    
+    // PERFORMANCE FIX: Start the typing animation ONLY after the loader is gone.
+    // This stops the JS from blocking the main thread during initial page boot!
+    engineeringTypingCycle();
   }, 1000); // Optimized visual response timeout
 });
 
@@ -13,23 +19,26 @@ const systemCacheTheme = localStorage.getItem("portfolio-theme");
 
 if (systemCacheTheme === "light") {
   document.body.classList.add("light-theme");
-  themeToggle.textContent = "🌙";
+  if (themeToggle) themeToggle.textContent = "🌙";
 } else {
-  themeToggle.textContent = "☀️";
+  if (themeToggle) themeToggle.textContent = "☀️";
 }
 
-themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("light-theme");
-  const isLightActive = document.body.classList.contains("light-theme");
-  localStorage.setItem("portfolio-theme", isLightActive ? "light" : "dark");
-  themeToggle.textContent = isLightActive ? "🌙" : "☀️";
-});
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("light-theme");
+    const isLightActive = document.body.classList.contains("light-theme");
+    localStorage.setItem("portfolio-theme", isLightActive ? "light" : "dark");
+    themeToggle.textContent = isLightActive ? "🌙" : "☀️";
+  });
+}
 
 // ====== PERFORMANCE CURSOR CONTROL PIPELINES ======
 const cursor = document.querySelector(".cursor");
 const follower = document.querySelector(".cursor-follower");
 
-if (window.matchMedia("(pointer: fine)").matches) {
+// Defensive check to ensure elements exist and user is on a desktop device with a mouse
+if (cursor && follower && window.matchMedia("(pointer: fine)").matches) {
   document.addEventListener("mousemove", (e) => {
     requestAnimationFrame(() => {
       cursor.style.left = `${e.clientX}px`;
@@ -44,8 +53,9 @@ if (window.matchMedia("(pointer: fine)").matches) {
 // ====== OVERLAY MOBILE MENU MECHANICS ======
 function toggleMenu() {
   const mobileNav = document.getElementById("mobileNav");
-  mobileNav.classList.toggle("active");
+  if (!mobileNav) return;
   
+  mobileNav.classList.toggle("active");
   const isExpanded = mobileNav.classList.contains("active");
   mobileNav.setAttribute("aria-hidden", !isExpanded ? "true" : "false");
 }
@@ -54,8 +64,10 @@ document.addEventListener("click", (e) => {
   const mobileNav = document.getElementById("mobileNav");
   const toggleBtn = document.querySelector(".nav-toggle");
   
-  if (mobileNav.classList.contains("active") && !mobileNav.contains(e.target) && !toggleBtn.contains(e.target)) {
-    toggleMenu();
+  if (mobileNav && toggleBtn && mobileNav.classList.contains("active")) {
+    if (!mobileNav.contains(e.target) && !toggleBtn.contains(e.target)) {
+      toggleMenu();
+    }
   }
 });
 
@@ -91,7 +103,6 @@ function engineeringTypingCycle() {
 
   setTimeout(engineeringTypingCycle, computationalSpeed);
 }
-engineeringTypingCycle();
 
 // ====== VIEWPORT ANIMATION ENGINE INTERSECTION OBSERVER ======
 const intersectionConfiguration = {
