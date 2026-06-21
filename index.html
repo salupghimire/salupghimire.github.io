@@ -198,4 +198,49 @@
           </button>
           <a href="https://github.com/salupghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
             <span class="channel-title">github</span>
-            <span>@salupghimire
+            <span>@salupghimire</span>
+          </a>
+          <a href="https://www.chess.com/member/salup_ghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
+            <span class="channel-title">chess.com</span>
+            <span>salup_ghimire · Rapid <strong id="live-chess-rating-2">...</strong></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p><span class="prompt">$</span> echo "Built with HTML, CSS & JS" · © <span id="year"></span> Salup Ghimire</p>
+    <p class="footer-hint">Press <kbd>Ctrl</kbd>+<kbd>K</kbd> for commands · type <kbd>sudo</kbd> for terminal</p>
+  </footer>
+
+  <!-- Command Palette -->
+  <div id="command-palette" class="command-palette" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="palette-backdrop" onclick="closeCommandPalette()"></div>
+    <div class="palette-panel">
+      <input type="text" id="palette-input" placeholder="Type a command or search..." autocomplete="off" aria-label="Command search" />
+      <ul id="palette-list" class="palette-list" role="listbox"></ul>
+    </div>
+  </div>
+
+  <!-- Terminal Easter Egg -->
+  <div id="terminal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Terminal">
+    <div class="terminal-header">
+      <span>salup@portfolio:~</span>
+      <button type="button" class="terminal-close" onclick="closeTerminal()" aria-label="Close terminal">[exit]</button>
+    </div>
+    <div id="terminal-output" class="terminal-body">
+      <p>Welcome to salupOS v2.0 — type <span class="term-highlight">help</span> for commands.</p>
+    </div>
+    <div class="terminal-input-line">
+      <span class="prompt">$</span>
+      <input type="text" id="terminal-input" aria-label="Terminal input" autocomplete="off" spellcheck="false" />
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
