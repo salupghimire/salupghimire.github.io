@@ -6,46 +6,15 @@
   <title>Salup Ghimire | Python Learner & Front-End Developer</title>
   
   <link rel="stylesheet" href="style.css">
-  
   <script src="script.js" defer></script>
   
   <meta name="description" content="Portfolio of Salup Ghimire - Grade 12 student and growing developer specializing in Python foundations and Front-End engineering.">
   <meta name="keywords" content="Salup Ghimire, Salup, Ghimire, Python Developer, Front-End Developer Nepal, Web Developer Nepal, Chess">
   <meta name="author" content="Salup Ghimire">
-
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://github.com/salupghimire">
-  <meta property="og:title" content="Salup Ghimire | Portfolio">
-  <meta property="og:description" content="Explore Python and Front-End projects built by Salup Ghimire.">
-  <meta property="og:image" content="https://via.placeholder.com/1200x630/0b1220/06b6d4?text=Salup+Ghimire">
-  
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Salup Ghimire",
-  "url": "https://salupghimire.github.io/",
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "NP"
-  },
-  "jobTitle": "Front-End Developer & Student",
-  "knowsAbout": [
-    "HTML5",
-    "CSS3",
-    "JavaScript",
-    "Python",
-    "Responsive Web Design"
-  ],
-  "alumniOf": {
-    "@type": "EducationalOrganization",
-    "name": "High School Student"
-  }
-}
-</script>
-  <meta name="google-site-verification" content="djSFyEcQkQ4ong9qd33hyWx8CmxfF6VHgyD_YaFxBKY" />
 </head>
 <body>
+
+  <div id="scroll-progress"></div>
 
   <div id="loader" role="status" aria-live="polite">
     <div class="loader-content">
@@ -54,10 +23,22 @@
     </div>
   </div>
 
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div id="terminal-overlay" aria-hidden="true">
+    <div class="terminal-header">
+      <span>root@salup-server:~</span>
+      <button onclick="closeTerminal()" class="terminal-close">✖</button>
+    </div>
+    <div class="terminal-body" id="terminal-output">
+      <p>Authentication complete. Welcome to the Matrix.</p>
+      <p>Type <span class="term-highlight">help</span> to see available commands.</p>
+    </div>
+    <div class="terminal-input-line">
+      <span class="prompt">$</span>
+      <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
+    </div>
+  </div>
 
-  <div class="cursor"></div>
-  <div class="cursor-follower"></div>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <header class="main-header">
     <nav class="nav">
@@ -162,7 +143,11 @@
       <div class="card single-card">
         <h3>Tactical Engine Profiles</h3>
         <p>Using real-time calculations, pattern tracking, and tactical positional structures to train analytical and decision-making systems under strict time settings.</p>
-        <br>
+        
+        <p class="api-status" style="margin: 1rem 0; font-family: var(--font-mono); color: var(--accent);">
+          > LIVE RAPID RATING: <span id="live-chess-rating">Fetching...</span>
+        </p>
+
         <a class="btn" href="https://www.chess.com/member/salup_ghimire" target="_blank" rel="noopener noreferrer">Analyze Rating Profile</a>
       </div>
     </section>
@@ -187,10 +172,11 @@
         </form>
 
         <div class="contact-channels">
-          <a href="mailto:salupghimire10@gmail.com" class="contact-card">
-            <span class="channel-title">Direct Email</span>
-            <span class="channel-detail">salupghimire10@gmail.com</span>
-          </a>
+          <button type="button" onclick="copyEmail()" class="contact-card copy-btn" style="text-align: left; cursor: pointer; width: 100%;">
+            <span class="channel-title">Direct Email (Click to Copy)</span>
+            <span class="channel-detail" id="email-detail">salupghimire10@gmail.com</span>
+          </button>
+          
           <a href="https://github.com/salupghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
             <span class="channel-title">GitHub Channels</span>
             <span class="channel-detail">@salupghimire</span>
@@ -199,17 +185,13 @@
             <span class="channel-title">X / Twitter</span>
             <span class="channel-detail">@SalupGhimire32</span>
           </a>
-          <a href="https://facebook.com/salup.ghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
-            <span class="channel-title">Meta Facebook</span>
-            <span class="channel-detail">Salup Ghimire</span>
-          </a>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>© 2026 Salup Ghimire. Designed for modern performance. All Rights Reserved.</p>
+    <p>© 2026 Salup Ghimire. Designed for modern performance.</p>
   </footer>
 
 </body>
