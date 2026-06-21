@@ -39,16 +39,13 @@ body::before {
 }
 
 /* ==========================================================================
-   NEW FEATURE: SCROLL PROGRESS BAR
+   FEATURES: PROGRESS BAR & TERMINAL
    ========================================================================== */
 #scroll-progress {
   position: fixed; top: 0; left: 0; width: 0%; height: 3px;
   background: var(--accent); z-index: 10000; transition: width 0.1s ease-out;
 }
 
-/* ==========================================================================
-   NEW FEATURE: TERMINAL OVERLAY
-   ========================================================================== */
 #terminal-overlay {
   position: fixed; inset: 0; background: rgba(3, 7, 18, 0.98);
   backdrop-filter: blur(10px); z-index: 20000; display: flex;
@@ -101,9 +98,27 @@ body::before {
 .contact-card:hover { border-color: var(--accent); }
 .channel-title { display: block; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); }
 
+/* ==========================================================================
+   RESPONSIVE & MOBILE FIXES
+   ========================================================================== */
 @media (max-width: 768px) {
-  .nav-desktop { display: none; }
+  .nav-desktop { display: none !important; }
   .nav-toggle { display: block; }
+  .mobile-nav {
+    display: none; 
+    flex-direction: column; 
+    background: var(--bg-surface); 
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+    width: 100%;
+  }
+  .mobile-nav[aria-hidden="false"] { display: flex !important; }
+  .mobile-nav a { padding: 1rem; color: var(--text-main); text-decoration: none; border-bottom: 1px solid var(--bg-surface-hover); }
   .contact-layout { grid-template-columns: 1fr; }
   .title { font-size: 2.5rem; }
+}
+
+@media (min-width: 769px) {
+  .nav-toggle { display: none !important; }
+  .mobile-nav { display: none !important; }
 }
