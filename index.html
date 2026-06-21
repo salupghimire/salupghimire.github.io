@@ -1,187 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Salup Ghimire | Python Learner & Front-End Developer</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Salup Ghimire — Front-End Developer, Python enthusiast, and chess strategist." />
+  <meta property="og:title" content="Salup Ghimire | Developer Portfolio" />
+  <meta property="og:description" content="Front-End Developer · Python · Chess" />
+  <title>Salup Ghimire | Developer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&gt;_</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Prevent theme flash -->
+  <script>
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    })();
+  </script>
 </head>
 <body>
+  <div id="cursor-glow" aria-hidden="true"></div>
+  <div id="scroll-progress" role="progressbar" aria-label="Scroll progress" aria-valuemin="0" aria-valuemax="100"></div>
 
-  <div id="scroll-progress"></div>
-
-  <div id="loader" role="status" aria-live="polite">
-    <div class="loader-content">
-      <div class="loader-ring"></div>
-      <h2 class="loader-text">Salup Ghimire</h2>
+  <!-- Loader -->
+  <div id="loader" aria-hidden="false">
+    <div class="loader-inner">
+      <span class="loader-prompt">$</span>
+      <span class="loader-text">booting portfolio...</span>
+      <span class="loader-cursor">|</span>
     </div>
   </div>
 
-  <div id="terminal-overlay" aria-hidden="true">
-    <div class="terminal-header">
-      <span>root@salup-server:~</span>
-      <button onclick="closeTerminal()" class="terminal-close">✖</button>
-    </div>
-    <div class="terminal-body" id="terminal-output">
-      <p>Authentication complete. Welcome to the Matrix.</p>
-    </div>
-    <div class="terminal-input-line">
-      <span class="prompt">$</span>
-      <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
-    </div>
+  <!-- Status bar -->
+  <div class="status-bar" aria-label="Live status">
+    <span class="status-dot" aria-hidden="true"></span>
+    <span>ONLINE</span>
+    <span class="status-sep">·</span>
+    <span id="status-location">Nepal</span>
+    <span class="status-sep">·</span>
+    <span>Rapid: <strong id="live-chess-rating">...</strong></span>
+    <span class="status-sep">·</span>
+    <span>Repos: <strong id="live-github-repos">...</strong></span>
   </div>
 
+  <!-- Header -->
   <header class="main-header">
-    <nav class="nav">
-      <div class="logo">
-        <div class="logo-mark">S</div>
-        <span class="logo-text">Salup Ghimire</span>
-      </div>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#hero" class="logo">
+        <span class="logo-mark">&gt;_</span>
+        <span class="logo-text">salup.dev</span>
+      </a>
 
       <div class="nav-desktop">
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#timeline">Journey</a>
-        <a href="#projects">Projects</a>
-        <a href="#chess">Chess</a>
-        <a href="#contact">Contact</a>
+        <a href="#about">about</a>
+        <a href="#skills">skills</a>
+        <a href="#projects">projects</a>
+        <a href="#contact">contact</a>
+        <button type="button" id="cmdHint" class="cmd-hint" title="Open command palette (Ctrl+K)">
+          <kbd>Ctrl</kbd><kbd>K</kbd>
+        </button>
+        <button type="button" id="themeToggle" aria-label="Toggle theme">🌙</button>
       </div>
 
-      <div class="nav-actions">
-        <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Theme">☀️</button>
-        <button class="nav-toggle" onclick="toggleMenu()" aria-label="Open Mobile Menu">☰</button>
-      </div>
+      <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" onclick="toggleMenu()">☰</button>
     </nav>
-
-    <div id="mobileNav" class="mobile-nav" aria-hidden="true">
-      <a href="#about" onclick="toggleMenu()">About</a>
-      <a href="#skills" onclick="toggleMenu()">Skills</a>
-      <a href="#timeline" onclick="toggleMenu()">Journey</a>
-      <a href="#projects" onclick="toggleMenu()">Projects</a>
-      <a href="#chess" onclick="toggleMenu()">Chess</a>
-      <a href="#contact" onclick="toggleMenu()">Contact</a>
-    </div>
   </header>
 
-  <main id="main-content">
-    <section class="hero">
-      <img src="salup.jpg" alt="Salup Ghimire Portrait" class="profile-photo"> 
-      <h1 class="title">Salup Ghimire</h1>
-      <h3><span id="typing"></span></h3>
-      <p class="bio">
-        Grade 12 student from Nepal focusing on web development fundamentals and building growing familiarity with Python frameworks.
-      </p>
+  <!-- Mobile nav -->
+  <div id="mobileBackdrop" class="mobile-backdrop" aria-hidden="true" onclick="closeMobileNav()"></div>
+  <nav id="mobileNav" class="mobile-nav" aria-hidden="true" aria-label="Mobile navigation">
+    <a href="#about" onclick="closeMobileNav()">about</a>
+    <a href="#skills" onclick="closeMobileNav()">skills</a>
+    <a href="#projects" onclick="closeMobileNav()">projects</a>
+    <a href="#contact" onclick="closeMobileNav()">contact</a>
+    <button type="button" class="mobile-cmd-btn" onclick="openCommandPalette(); closeMobileNav();">⌘ Command Palette</button>
+  </nav>
+
+  <main>
+    <!-- Hero -->
+    <section id="hero" class="hero reveal">
+      <img src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" alt="Salup Ghimire profile photo" class="profile-photo" width="130" height="130" loading="eager" />
+
+      <div class="hero-terminal">
+        <div class="hero-terminal-bar">
+          <span></span><span></span><span></span>
+          <span class="hero-terminal-title">~/salup/portfolio</span>
+        </div>
+        <div class="hero-terminal-body">
+          <p class="hero-terminal-line">
+            <span class="prompt">$</span> whoami
+          </p>
+          <p class="hero-terminal-output">Salup Ghimire</p>
+          <p class="hero-terminal-line">
+            <span class="prompt">$</span> role --current
+          </p>
+          <p class="hero-terminal-output">
+            <span id="typing">&nbsp;</span><span class="typing-cursor" aria-hidden="true">|</span>
+          </p>
+          <p class="hero-terminal-line muted">
+            <span class="prompt">$</span> hint --easter-egg <span class="term-dim"># try typing "sudo" anywhere</span>
+          </p>
+        </div>
+      </div>
+
       <div class="hero-actions">
         <a href="#projects" class="btn">View Projects</a>
-        <a href="#" class="btn secondary" download="Salup_Ghimire_Resume.pdf">Download CV</a>
+        <a href="https://github.com/salupghimire" class="btn secondary" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
     </section>
 
-    <section id="about" class="section">
-      <h2>About Me</h2>
-      <p>I am a student working on translating theoretical concepts into clean code layouts. I prioritize steady technical skill development through structured documentation, coding practice, and open-source explorations.</p>
+    <!-- About -->
+    <section id="about" class="section reveal" aria-labelledby="about-heading">
+      <h2 id="about-heading" class="section-title"><span class="prompt">#</span> about</h2>
+      <p class="section-lead">
+        Developer and student building clean interfaces and experimenting with Python.
+        I treat code like chess: plan the structure, then execute precisely.
+      </p>
+      <p class="learning-line">
+        <span class="channel-title">currently learning</span>
+        React · APIs · System Design
+      </p>
     </section>
 
-    <section id="skills" class="section">
-      <h2>Skills & Technologies</h2>
+    <!-- Skills -->
+    <section id="skills" class="section reveal" aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="section-title"><span class="prompt">#</span> stack</h2>
+      <pre class="package-json" aria-label="Tech stack"><code>{
+  <span class="json-key">"frontend"</span>: [<span class="json-str">"HTML"</span>, <span class="json-str">"CSS"</span>, <span class="json-str">"JavaScript"</span>],
+  <span class="json-key">"backend"</span>:  [<span class="json-str">"Python"</span>],
+  <span class="json-key">"tools"</span>:    [<span class="json-str">"Git"</span>, <span class="json-str">"VS Code"</span>, <span class="json-str">"Linux"</span>],
+  <span class="json-key">"interests"</span>: [<span class="json-str">"Chess"</span>, <span class="json-str">"Open Source"</span>]
+}</code></pre>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="section reveal" aria-labelledby="projects-heading">
+      <h2 id="projects-heading" class="section-title"><span class="prompt">#</span> projects</h2>
       <div class="grid">
-        <div class="card"><p>Front-End Engineering (HTML/CSS/JS)</p></div>
-        <div class="card"><p>Python Foundations</p></div>
-        <div class="card"><p>Analytical Logic & Chess Strategy</p></div>
-      </div>
-    </section>
-
-    <section id="timeline" class="section">
-      <h2>Education & Journey</h2>
-      <div class="timeline-container">
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2025 - 2027</div>
-          <div class="timeline-content">
-            <h3>High School Studies (Grade 11-12)</h3>
-            <p>Pursuing science and technology tracks in Nepal, balancing school requirements with self-directed software development exploration.</p>
+        <article class="card project-card">
+          <div class="repo-meta">
+            <span class="repo-name">salup/portfolio-v2</span>
+            <span class="repo-badge">main</span>
           </div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-date">2026 - Present</div>
-          <div class="timeline-content">
-            <h3>Exploring Python & Logic Foundations</h3>
-            <p>Diving into core programming concepts. Actively learning structural flow, standard libraries and python concepts.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="projects" class="section">
-      <h2>Featured Work</h2>
-      <div class="grid production-grid">
-        <div class="card project-card">
+          <span class="repo-lang"><span class="lang-dot js"></span> JavaScript</span>
           <h3>Personal Portfolio</h3>
-          <p>A responsive, accessible portfolio template styled completely with CSS custom properties and interactive theme toggling features.</p>
-          <a class="project-link" href="https://github.com/salupghimire" target="_blank" rel="noopener noreferrer">View Repository →</a>
-        </div>
-        <div class="card project-card">
-          <h3>Python Core Scripts</h3>
-          <p>A compilation of logic scripts, terminal automation tasks, and foundational algorithm tests built during my coding practice.</p>
-          <a class="project-link" href="https://github.com/salupghimire" target="_blank" rel="noopener noreferrer">View Repository →</a>
-        </div>
+          <p>Dark-mode developer portfolio with live APIs, command palette, and terminal easter egg.</p>
+          <div class="repo-actions">
+            <a href="#" class="repo-link" target="_blank" rel="noopener">Live</a>
+            <button type="button" class="repo-copy" data-copy="https://github.com/salupghimire/portfolio">Copy clone URL</button>
+          </div>
+        </article>
+
+        <article class="card project-card">
+          <div class="repo-meta">
+            <span class="repo-name">salup/chess-tools</span>
+            <span class="repo-badge">dev</span>
+          </div>
+          <span class="repo-lang"><span class="lang-dot py"></span> Python</span>
+          <h3>Chess Analysis Scripts</h3>
+          <p>Python utilities for parsing games and exploring opening patterns from PGN files.</p>
+          <div class="repo-actions">
+            <a href="#" class="repo-link" target="_blank" rel="noopener">Code</a>
+            <button type="button" class="repo-copy" data-copy="https://github.com/salupghimire/chess-tools">Copy clone URL</button>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section id="chess" class="section">
-      <h2>Chess Matrix</h2>
-      <div class="card single-card">
-        <h3>Tactical Engine Profiles</h3>
-        <p>Using real-time calculations, pattern tracking, and tactical positional structures to train analytical and decision-making systems under strict time settings.</p>
-        <p class="api-status" style="margin: 1rem 0; font-family: var(--font-mono); color: var(--accent);">
-          > LIVE RAPID RATING: <span id="live-chess-rating">Fetching...</span>
-        </p>
-        <a class="btn" href="https://www.chess.com/member/salup_ghimire" target="_blank" rel="noopener noreferrer">Analyze Rating Profile</a>
-      </div>
-    </section>
-
-    <section id="contact" class="section">
-      <h2>Get In Touch</h2>
+    <!-- Contact -->
+    <section id="contact" class="section reveal" aria-labelledby="contact-heading">
+      <h2 id="contact-heading" class="section-title"><span class="prompt">#</span> contact</h2>
       <div class="contact-layout">
-        <form class="contact-form" action="https://formspree.io/f/maqzraan" method="POST">
+        <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
           <div class="form-group">
-            <label for="name">Your Name</label>
-            <input type="text" id="name" name="name" required placeholder="John Doe">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your name" />
           </div>
           <div class="form-group">
-            <label for="email">Your Email</label>
-            <input type="email" id="email" name="email" required placeholder="john@example.com">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="you@email.com" />
           </div>
           <div class="form-group">
             <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" required placeholder="Let's build something epic..."></textarea>
+            <textarea id="message" name="message" rows="5" required placeholder="Let's build something."></textarea>
           </div>
-          <button type="submit" class="btn">Send Secure Message</button>
+          <button type="submit" class="btn">Send Message</button>
         </form>
 
         <div class="contact-channels">
-          <button type="button" onclick="copyEmail()" class="contact-card copy-btn" style="text-align: left; cursor: pointer; width: 100%;">
-            <span class="channel-title">Direct Email (Click to Copy)</span>
-            <span class="channel-detail" id="email-detail">salupghimire10@gmail.com</span>
+          <button type="button" class="contact-card" onclick="copyEmail()">
+            <span class="channel-title">email</span>
+            <span id="email-detail">salupghimire10@gmail.com</span>
           </button>
           <a href="https://github.com/salupghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
-            <span class="channel-title">GitHub Channels</span>
-            <span class="channel-detail">@salupghimire</span>
-          </a>
-          <a href="https://x.com/SalupGhimire32" class="contact-card" target="_blank" rel="noopener noreferrer">
-            <span class="channel-title">X / Twitter</span>
-            <span class="channel-detail">@SalupGhimire32</span>
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2026 Salup Ghimire. Designed for modern performance.</p>
-  </footer>
-
-</body>
-</html>
+            <span class="channel-title">github</span>
+            <span>@salupghimire
