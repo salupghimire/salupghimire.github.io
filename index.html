@@ -3,26 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Salup Ghimire — Front-End Developer, Python enthusiast, and chess strategist." />
-  <meta property="og:title" content="Salup Ghimire | Developer Portfolio" />
-  <meta property="og:description" content="Front-End Developer · Python · Chess" />
-  <title>Salup Ghimire | Developer</title>
+
+  <!-- ===== Core SEO ===== -->
+  <title>Salup Ghimire | Front-End Developer & Python Enthusiast</title>
+  <meta name="description" content="Portfolio of Salup Ghimire — Front-End Developer building clean, fast interfaces, exploring Python, and thinking in chess strategy. Based in Nepal." />
+  <meta name="keywords" content="Salup Ghimire, Front-End Developer, Python Developer, Web Developer Nepal, Chess Player Developer" />
+  <meta name="author" content="Salup Ghimire" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://salup.dev/" />
+  <meta name="theme-color" content="#06b6d4" />
+
+  <!-- ===== Open Graph ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://salup.dev/" />
+  <meta property="og:title" content="Salup Ghimire | Front-End Developer & Python Enthusiast" />
+  <meta property="og:description" content="Front-End Developer · Python · Chess. Clean interfaces, careful structure, precise execution." />
+  <meta property="og:image" content="https://salup.dev/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- ===== Twitter Card ===== -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Salup Ghimire | Front-End Developer" />
+  <meta name="twitter:description" content="Front-End Developer · Python · Chess." />
+  <meta name="twitter:image" content="https://salup.dev/og-image.jpg" />
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&gt;_</text></svg>" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="salup.jpg" />
   <link rel="stylesheet" href="style.css" />
+
   <!-- Prevent theme flash -->
   <script>
     (function () {
-      const saved = localStorage.getItem('theme');
+      var saved = localStorage.getItem('theme');
       if (saved === 'light' || saved === 'dark') {
         document.documentElement.setAttribute('data-theme', saved);
+      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.setAttribute('data-theme', 'light');
       }
     })();
   </script>
+
+  <!-- ===== JSON-LD: Person schema ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Salup Ghimire",
+    "url": "https://salup.dev/",
+    "jobTitle": "Front-End Developer",
+    "knowsAbout": ["JavaScript", "HTML", "CSS", "Python", "Chess"],
+    "sameAs": [
+      "https://github.com/salupghimire",
+      "https://www.chess.com/member/salup_ghimire"
+    ]
+  }
+  </script>
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
   <div id="cursor-glow" aria-hidden="true"></div>
   <div id="scroll-progress" role="progressbar" aria-label="Scroll progress" aria-valuemin="0" aria-valuemax="100"></div>
 
@@ -42,9 +87,11 @@
     <span class="status-sep">·</span>
     <span id="status-location">Nepal</span>
     <span class="status-sep">·</span>
-    <span>Rapid: <strong id="live-chess-rating">...</strong></span>
+    <span class="hide-xs">Rapid: <strong id="live-chess-rating">...</strong></span>
+    <span class="status-sep hide-xs">·</span>
+    <span class="hide-xs">Repos: <strong id="live-github-repos">...</strong></span>
     <span class="status-sep">·</span>
-    <span>Repos: <strong id="live-github-repos">...</strong></span>
+    <span>Up: <strong id="session-uptime">0s</strong></span>
   </div>
 
   <!-- Header -->
@@ -56,16 +103,16 @@
       </a>
 
       <div class="nav-desktop">
-        <a href="#about">about</a>
-        <a href="#skills">skills</a>
-        <a href="#projects">projects</a>
-        <a href="#contact">contact</a>
+        <a href="#about" data-section="about">about</a>
+        <a href="#skills" data-section="skills">skills</a>
+        <a href="#projects" data-section="projects">projects</a>
+        <a href="#contact" data-section="contact">contact</a>
         <button type="button" id="cmdHint" class="cmd-hint" title="Open command palette (Ctrl+K)">
           <kbd>Ctrl</kbd><kbd>K</kbd>
         </button>
-        <button type="button" id="themeToggle" aria-label="Toggle theme">🌙</button>
       </div>
 
+      <button type="button" id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
       <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" onclick="toggleMenu()">☰</button>
     </nav>
   </header>
@@ -73,14 +120,14 @@
   <!-- Mobile nav -->
   <div id="mobileBackdrop" class="mobile-backdrop" aria-hidden="true" onclick="closeMobileNav()"></div>
   <nav id="mobileNav" class="mobile-nav" aria-hidden="true" aria-label="Mobile navigation">
-    <a href="#about" onclick="closeMobileNav()">about</a>
-    <a href="#skills" onclick="closeMobileNav()">skills</a>
-    <a href="#projects" onclick="closeMobileNav()">projects</a>
-    <a href="#contact" onclick="closeMobileNav()">contact</a>
+    <a href="#about" data-section="about" onclick="closeMobileNav()">about</a>
+    <a href="#skills" data-section="skills" onclick="closeMobileNav()">skills</a>
+    <a href="#projects" data-section="projects" onclick="closeMobileNav()">projects</a>
+    <a href="#contact" data-section="contact" onclick="closeMobileNav()">contact</a>
     <button type="button" class="mobile-cmd-btn" onclick="openCommandPalette(); closeMobileNav();">⌘ Command Palette</button>
   </nav>
 
-  <main>
+  <main id="main-content">
     <!-- Hero -->
     <section id="hero" class="hero reveal">
       <img src="salup.jpg" alt="Salup Ghimire profile photo" class="profile-photo" width="130" height="130" loading="eager" />
@@ -102,7 +149,7 @@
             <span id="typing">&nbsp;</span><span class="typing-cursor" aria-hidden="true">|</span>
           </p>
           <p class="hero-terminal-line muted">
-            <span class="prompt">$</span> hint --easter-egg <span class="term-dim"># try typing "sudo" anywhere</span>
+            <span class="prompt">$</span> hint --easter-egg <span class="term-dim"># try typing "sudo" or "matrix" anywhere</span>
           </p>
         </div>
       </div>
@@ -110,6 +157,7 @@
       <div class="hero-actions">
         <a href="#projects" class="btn">View Projects</a>
         <a href="https://github.com/salupghimire" class="btn secondary" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <button type="button" class="btn ghost" id="shareBtn">Share</button>
       </div>
     </section>
 
@@ -122,7 +170,7 @@
       </p>
       <p class="learning-line">
         <span class="channel-title">currently learning</span>
-        Python· Chess · Web Technology
+        Python · Chess · Web Technology
       </p>
     </section>
 
@@ -135,13 +183,58 @@
   <span class="json-key">"tools"</span>:    [<span class="json-str">"Git"</span>, <span class="json-str">"VS Code"</span>, <span class="json-str">"Linux"</span>],
   <span class="json-key">"interests"</span>: [<span class="json-str">"Chess"</span>, <span class="json-str">"Open Source"</span>]
 }</code></pre>
+
+      <div class="build-log" aria-label="Skill proficiency">
+        <p class="build-log-cmd"><span class="prompt">$</span> npm run build:skills</p>
+
+        <div class="skill-bar" data-level="85">
+          <div class="skill-bar-top">
+            <span class="skill-name">HTML / CSS</span>
+            <span class="skill-pct">85%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+
+        <div class="skill-bar" data-level="75">
+          <div class="skill-bar-top">
+            <span class="skill-name">JavaScript</span>
+            <span class="skill-pct">75%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+
+        <div class="skill-bar" data-level="65">
+          <div class="skill-bar-top">
+            <span class="skill-name">Python</span>
+            <span class="skill-pct">65%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+
+        <div class="skill-bar" data-level="70">
+          <div class="skill-bar-top">
+            <span class="skill-name">Git / CLI</span>
+            <span class="skill-pct">70%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill"></div></div>
+        </div>
+
+        <p class="build-log-done">✓ build complete <span class="term-dim">(0 errors, 4 modules)</span></p>
+      </div>
     </section>
 
     <!-- Projects -->
     <section id="projects" class="section reveal" aria-labelledby="projects-heading">
       <h2 id="projects-heading" class="section-title"><span class="prompt">#</span> projects</h2>
-      <div class="grid">
-        <article class="card project-card">
+
+      <div class="filter-bar" role="group" aria-label="Filter projects by language">
+        <button type="button" class="filter-btn active" data-filter="all">All</button>
+        <button type="button" class="filter-btn" data-filter="js">JavaScript</button>
+        <button type="button" class="filter-btn" data-filter="py">Python</button>
+      </div>
+
+      <div class="grid" id="projectGrid">
+        <article class="card project-card" data-tag="js">
           <div class="repo-meta">
             <span class="repo-name">salup/portfolio-v2</span>
             <span class="repo-badge">main</span>
@@ -150,12 +243,12 @@
           <h3>Personal Portfolio</h3>
           <p>Dark-mode developer portfolio with live APIs, command palette, and terminal easter egg.</p>
           <div class="repo-actions">
-            <a href="#" class="repo-link" target="_blank" rel="noopener">Live</a>
+            <a href="https://github.com/salupghimire/portfolio" class="repo-link" target="_blank" rel="noopener">Code</a>
             <button type="button" class="repo-copy" data-copy="https://github.com/salupghimire/portfolio">Copy clone URL</button>
           </div>
         </article>
 
-        <article class="card project-card">
+        <article class="card project-card" data-tag="py">
           <div class="repo-meta">
             <span class="repo-name">salup/chess-tools</span>
             <span class="repo-badge">dev</span>
@@ -164,18 +257,23 @@
           <h3>Chess Analysis Scripts</h3>
           <p>Python utilities for parsing games and exploring opening patterns from PGN files.</p>
           <div class="repo-actions">
-            <a href="#" class="repo-link" target="_blank" rel="noopener">Code</a>
+            <a href="https://github.com/salupghimire/chess-tools" class="repo-link" target="_blank" rel="noopener">Code</a>
             <button type="button" class="repo-copy" data-copy="https://github.com/salupghimire/chess-tools">Copy clone URL</button>
           </div>
         </article>
       </div>
+
+      <p class="filter-empty" id="filterEmpty" hidden>No projects match this filter yet — more in progress.</p>
     </section>
 
     <!-- Contact -->
     <section id="contact" class="section reveal" aria-labelledby="contact-heading">
       <h2 id="contact-heading" class="section-title"><span class="prompt">#</span> contact</h2>
       <div class="contact-layout">
-        <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <form class="contact-form" id="contactForm" action="https://formsubmit.co/salupghimire10@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New message from salup.dev" />
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
           <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" required placeholder="Your name" />
@@ -188,7 +286,8 @@
             <label for="message">Message</label>
             <textarea id="message" name="message" rows="5" required placeholder="Let's build something."></textarea>
           </div>
-          <button type="submit" class="btn">Send Message</button>
+          <button type="submit" class="btn" id="contactSubmit">Send Message</button>
+          <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
         </form>
 
         <div class="contact-channels">
@@ -214,6 +313,9 @@
     <p class="footer-hint">Press <kbd>Ctrl</kbd>+<kbd>K</kbd> for commands · type <kbd>sudo</kbd> for terminal</p>
   </footer>
 
+  <!-- Back to top -->
+  <button type="button" id="backToTop" class="back-to-top" aria-label="Back to top">↑ top</button>
+
   <!-- Command Palette -->
   <div id="command-palette" class="command-palette" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Command palette">
     <div class="palette-backdrop" onclick="closeCommandPalette()"></div>
@@ -238,9 +340,12 @@
     </div>
   </div>
 
+  <!-- Matrix rain overlay -->
+  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+
   <!-- Toast -->
   <div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true"></div>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
