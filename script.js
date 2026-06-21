@@ -34,34 +34,46 @@ function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 // ==========================================================================
-// LOADER & TYPING
+// LOADER (runs first — won't get stuck)
 // ==========================================================================
-window.addEventListener('load', () => {
-  const loader = $('loader');
-  if (loader) {
+(function initLoader() {
+  function hideLoader() {
+    const loader = $('loader');
+    if (!loader || loader.dataset.hidden === '1') return;
+    loader.dataset.hidden = '1';
     loader.style.opacity = '0';
     setTimeout(() => {
       loader.style.display = 'none';
+      loader.style.pointerEvents = 'none';
       loader.setAttribute('aria-hidden', 'true');
       startTyping();
     }, 400);
   }
 
-  $('year').textContent = new Date().getFullYear();
-  initScrollReveal();
-  initCursorGlow();
-  initCopyButtons();
-  fetchChessRating();
-  fetchGitHubStats();
-});
+  if (document.readyState === 'complete') {
+    hideLoader();
+  } else {
+    window.addEventListener('load', hideLoader);
+  }
+})();
 
+// ==========================================================================
+// TYPING EFFECT
+// ==========================================================================
 const typingSpan = $('typing');
 const words = ['Front-End Developer.', 'Python Enthusiast.', 'Chess Strategist.'];
 let wordIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
-let typingTimer = null;
 
 function startTyping() {
   if (!typingSpan || prefersReducedMotion()) {
@@ -84,7 +96,7 @@ function startTyping() {
     typeSpeed = 500;
   }
 
-  typingTimer = setTimeout(startTyping, typeSpeed);
+  setTimeout(startTyping, typeSpeed);
 }
 
 // ==========================================================================
@@ -129,7 +141,10 @@ function applyTheme(theme) {
   localStorage.setItem('theme', theme);
   if (themeToggle) {
     themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
-    themeToggle.setAttribute('aria-label', `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`);
+    themeToggle.setAttribute(
+      'aria-label',
+      `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`
+    );
   }
 }
 
@@ -155,13 +170,18 @@ window.addEventListener('scroll', () => {
   const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
   const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
   scrollBar.style.width = scrolled + '%';
-  scrollBar.setAttribute('aria-valuenow', Math.round(scrolled));
+  scrollBar.setAttribute('aria-valuenow', String(Math.round(scrolled)));
 });
 
 // ==========================================================================
 // COPY EMAIL & REPO URLS
 // ==========================================================================
 function copyEmail() {
+  if (!navigator.clipboard) {
+    showToast('Clipboard not supported in this browser');
+    return;
+  }
+
   navigator.clipboard.writeText(EMAIL).then(() => {
     showToast('Email copied to clipboard ✓');
     const detail = $('email-detail');
@@ -174,14 +194,16 @@ function copyEmail() {
         detail.style.color = '';
       }, 2500);
     }
-  }).catch(() => showToast('Copy failed — select manually'));
+  }).catch(() => {
+    showToast('Copy failed — select manually');
+  });
 }
 
 function initCopyButtons() {
   document.querySelectorAll('.repo-copy').forEach(btn => {
     btn.addEventListener('click', () => {
       const url = btn.getAttribute('data-copy');
-      if (!url) return;
+      if (!url || !navigator.clipboard) return;
       navigator.clipboard.writeText(url).then(() => {
         showToast('Clone URL copied ✓');
       });
@@ -205,7 +227,7 @@ function fetchChessRating() {
     .then(res => res.json())
     .then(data => {
       if (data.chess_rapid?.last?.rating) {
-        updateChessRatingUI(data.chess_rapid.last.rating);
+        updateChessRatingUI(String(data.chess_rapid.last.rating));
       } else {
         updateChessRatingUI('N/A');
       }
@@ -231,8 +253,11 @@ function fetchGitHubStats() {
 // SCROLL REVEAL
 // ==========================================================================
 function initScrollReveal() {
+  const revealEls = document.querySelectorAll('.reveal');
+  if (!revealEls.length) return;
+
   if (prefersReducedMotion()) {
-    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    revealEls.forEach(el => el.classList.add('visible'));
     return;
   }
 
@@ -248,7 +273,7 @@ function initScrollReveal() {
     { threshold: 0.12 }
   );
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  revealEls.forEach(el => observer.observe(el));
 }
 
 // ==========================================================================
@@ -278,8 +303,12 @@ const commands = [
   { label: 'Go to Contact', action: () => scrollToSection('#contact'), keys: 'contact' },
   { label: 'Toggle Theme', action: toggleTheme, keys: 'theme dark light' },
   { label: 'Copy Email', action: copyEmail, keys: 'email copy' },
-  { label: 'Open GitHub', action: () => window.open(`https://github.com/${GITHUB_USER}`, '_blank'), keys: 'github' },
-  { label: 'Open Terminal', action: openTerminal, keys: 'terminal sudo' },
+  {
+    label: 'Open GitHub',
+    action: () => window.open(`https://github.com/${GITHUB_USER}`, '_blank'),
+    keys: 'github'
+  },
+  { label: 'Open Terminal', action: openTerminal, keys: 'terminal sudo' }
 ];
 
 function scrollToSection(selector) {
@@ -290,13 +319,16 @@ function scrollToSection(selector) {
 function renderPaletteItems(filter = '') {
   if (!paletteList) return;
   const q = filter.trim().toLowerCase();
-  const filtered = commands.filter(cmd =>
-    cmd.label.toLowerCase().includes(q) || cmd.keys.includes(q)
+  const filtered = commands.filter(
+    cmd => cmd.label.toLowerCase().includes(q) || cmd.keys.includes(q)
   );
 
-  paletteList.innerHTML = filtered.map((cmd, i) =>
-    `<li role="option" data-index="${i}" class="${i === 0 ? 'active' : ''}">${cmd.label}<span>↵</span></li>`
-  ).join('');
+  paletteList.innerHTML = filtered
+    .map(
+      (cmd, i) =>
+        `<li role="option" data-index="${i}" class="${i === 0 ? 'active' : ''}">${escapeHtml(cmd.label)}<span>↵</span></li>`
+    )
+    .join('');
 
   paletteList._filtered = filtered;
 }
@@ -316,15 +348,17 @@ function closeCommandPalette() {
   setBodyScrollLocked(false);
 }
 
-if ($('cmdHint')) {
-  $('cmdHint').addEventListener('click', openCommandPalette);
+const cmdHint = $('cmdHint');
+if (cmdHint) {
+  cmdHint.addEventListener('click', openCommandPalette);
 }
 
 if (paletteInput) {
   paletteInput.addEventListener('input', () => renderPaletteItems(paletteInput.value));
+
   paletteInput.addEventListener('keydown', e => {
-    const items = paletteList?.querySelectorAll('li') || [];
-    let active = paletteList?.querySelector('li.active');
+    const items = paletteList ? paletteList.querySelectorAll('li') : [];
+    const active = paletteList ? paletteList.querySelector('li.active') : null;
     let index = active ? [...items].indexOf(active) : 0;
 
     if (e.key === 'ArrowDown') {
@@ -373,18 +407,20 @@ const terminalOverlay = $('terminal-overlay');
 const terminalInput = $('terminal-input');
 const terminalOutput = $('terminal-output');
 
-const NEOFETCH_ASCII = `
-  ███████╗ █████╗ ██╗     ██╗   ██╗██████╗ 
+function getNeofetchAscii() {
+  return `
+  ███████╗ █████╗ ██╗     ██╗   ██╗██████╗
   ██╔════╝██╔══██╗██║     ██║   ██║██╔══██╗
   ███████╗███████║██║     ██║   ██║██████╔╝
-  ╚════██║██╔══██║██║     ██║   ██║██╔═══╝ 
-  ███████║██║  ██║███████╗╚██████╔╝██║     
-  ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝     
+  ╚════██║██╔══██║██║     ██║   ██║██╔═══╝
+  ███████║██║  ██║███████╗╚██████╔╝██║
+  ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝
   OS: salupOS 2.0 · Shell: portfolio-sh
-  Theme: ${document.documentElement.getAttribute('data-theme')}
+  Theme: ${document.documentElement.getAttribute('data-theme') || 'dark'}
   Chess Rapid: ${chessRating}
   Email: ${EMAIL}
 `.trim();
+}
 
 function openTerminal() {
   if (!terminalOverlay || !terminalInput) return;
@@ -399,6 +435,12 @@ function closeTerminal() {
   setBodyScrollLocked(false);
 }
 
+function appendTerminal(html) {
+  if (!terminalOutput) return;
+  terminalOutput.insertAdjacentHTML('beforeend', html);
+  terminalOutput.scrollTop = terminalOutput.scrollHeight;
+}
+
 window.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeMobileNav();
@@ -410,7 +452,8 @@ window.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
     e.preventDefault();
     const isOpen = palette?.getAttribute('aria-hidden') === 'false';
-    isOpen ? closeCommandPalette() : openCommandPalette();
+    if (isOpen) closeCommandPalette();
+    else openCommandPalette();
     return;
   }
 
@@ -425,16 +468,6 @@ window.addEventListener('keydown', e => {
   }
 });
 
-function appendTerminal(html) {
-  if (!terminalOutput) return;
-  terminalOutput.insertAdjacentHTML('beforeend', html);
-  terminalOutput.scrollTop = terminalOutput.scrollHeight;
-}
-
-function escapeHtml(str) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
 if (terminalInput) {
   terminalInput.addEventListener('keydown', e => {
     if (e.key !== 'Enter') return;
@@ -445,7 +478,9 @@ if (terminalInput) {
 
     switch (command) {
       case 'help':
-        appendTerminal(`<p>Commands: <span class="term-highlight">about</span>, <span class="term-highlight">projects</span>, <span class="term-highlight">theme</span>, <span class="term-highlight">email</span>, <span class="term-highlight">chess</span>, <span class="term-highlight">neofetch</span>, <span class="term-highlight">clear</span>, <span class="term-highlight">exit</span></p>`);
+        appendTerminal(
+          `<p>Commands: <span class="term-highlight">about</span>, <span class="term-highlight">projects</span>, <span class="term-highlight">theme</span>, <span class="term-highlight">email</span>, <span class="term-highlight">chess</span>, <span class="term-highlight">neofetch</span>, <span class="term-highlight">clear</span>, <span class="term-highlight">exit</span></p>`
+        );
         break;
       case 'about':
         appendTerminal('<p>Salup Ghimire — Developer, Student, Chess Player.</p>');
@@ -455,17 +490,19 @@ if (terminalInput) {
         break;
       case 'theme':
         toggleTheme();
-        appendTerminal(`<p>Theme switched to ${document.documentElement.getAttribute('data-theme')}.</p>`);
+        appendTerminal(
+          `<p>Theme switched to ${document.documentElement.getAttribute('data-theme')}.</p>`
+        );
         break;
       case 'email':
         copyEmail();
         appendTerminal('<p>Email copied to clipboard.</p>');
         break;
       case 'chess':
-        appendTerminal(`<p>Rapid rating: ${chessRating}</p>`);
+        appendTerminal(`<p>Rapid rating: ${escapeHtml(chessRating)}</p>`);
         break;
       case 'neofetch':
-        appendTerminal(`<pre class="terminal-ascii">${NEOFETCH_ASCII.replace('${chessRating}', chessRating)}</pre>`);
+        appendTerminal(`<pre class="terminal-ascii">${escapeHtml(getNeofetchAscii())}</pre>`);
         break;
       case 'clear':
         terminalOutput.innerHTML = '';
@@ -474,12 +511,34 @@ if (terminalInput) {
         closeTerminal();
         break;
       default:
-        appendTerminal(`<p>Command not found: ${escapeHtml(command)}. Type 'help'.</p>`);
+        appendTerminal(
+          `<p>Command not found: ${escapeHtml(command)}. Type 'help'.</p>`
+        );
     }
   });
 }
 
-// Expose for inline onclick handlers
+// ==========================================================================
+// PAGE INIT (safe — every line checks elements first)
+// ==========================================================================
+function initPage() {
+  const yearEl = $('year');
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  initScrollReveal();
+  initCursorGlow();
+  initCopyButtons();
+  fetchChessRating();
+  fetchGitHubStats();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPage);
+} else {
+  initPage();
+}
+
+// Expose for inline onclick handlers in HTML
 window.toggleMenu = toggleMenu;
 window.closeMobileNav = closeMobileNav;
 window.copyEmail = copyEmail;
