@@ -8,6 +8,7 @@ const CHESS_USER = 'salup_ghimire';
 const GITHUB_USER = 'salupghimire';
 
 let chessRating = '...';
+const pageLoadTime = Date.now();
 
 function $(id) {
   return document.getElementById(id);
@@ -132,7 +133,8 @@ document.querySelectorAll('.mobile-nav a').forEach(link => {
 });
 
 // ==========================================================================
-// THEME
+// THEME (toggle button now lives outside .nav-desktop, so it's always
+// visible — this is the fix for "dark mode missing on phone")
 // ==========================================================================
 const themeToggle = $('themeToggle');
 
@@ -171,7 +173,54 @@ window.addEventListener('scroll', () => {
   const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
   scrollBar.style.width = scrolled + '%';
   scrollBar.setAttribute('aria-valuenow', String(Math.round(scrolled)));
-});
+
+  toggleBackToTop(winScroll);
+}, { passive: true });
+
+// ==========================================================================
+// BACK TO TOP
+// ==========================================================================
+const backToTopBtn = $('backToTop');
+
+function toggleBackToTop(scrollY) {
+  if (!backToTopBtn) return;
+  backToTopBtn.classList.toggle('visible', scrollY > 480);
+}
+
+if (backToTopBtn) {
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  });
+}
+
+// ==========================================================================
+// SCROLLSPY (highlights the current section in both navs)
+// ==========================================================================
+function initScrollSpy() {
+  const sections = ['about', 'skills', 'projects', 'contact']
+    .map(id => $(id))
+    .filter(Boolean);
+
+  const navLinks = document.querySelectorAll('[data-section]');
+  if (!sections.length || !navLinks.length) return;
+
+  const setActive = id => {
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.dataset.section === id);
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+  );
+
+  sections.forEach(section => observer.observe(section));
+}
 
 // ==========================================================================
 // COPY EMAIL & REPO URLS
@@ -208,6 +257,137 @@ function initCopyButtons() {
         showToast('Clone URL copied ✓');
       });
     });
+  });
+}
+
+// ==========================================================================
+// SHARE BUTTON
+// ==========================================================================
+function initShareButton() {
+  const btn = $('shareBtn');
+  if (!btn) return;
+
+  btn.addEventListener('click', async () => {
+    const shareData = {
+      title: document.title,
+      text: 'Check out this developer portfolio',
+      url: window.location.href
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // user cancelled the share sheet — no action needed
+      }
+      return;
+    }
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('Link copied to clipboard ✓');
+      });
+    }
+  });
+}
+
+// ==========================================================================
+// PROJECT FILTER
+// ==========================================================================
+function initProjectFilter() {
+  const buttons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.project-card');
+  const emptyMsg = $('filterEmpty');
+  if (!buttons.length || !cards.length) return;
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const matches = filter === 'all' || card.dataset.tag === filter;
+        card.classList.toggle('hidden-card', !matches);
+        if (matches) visibleCount++;
+      });
+
+      if (emptyMsg) emptyMsg.hidden = visibleCount > 0;
+    });
+  });
+}
+
+// ==========================================================================
+// SKILL BARS (animate width when scrolled into view)
+// ==========================================================================
+function initSkillBars() {
+  const bars = document.querySelectorAll('.skill-bar');
+  if (!bars.length) return;
+
+  if (prefersReducedMotion()) {
+    bars.forEach(bar => {
+      const fill = bar.querySelector('.bar-fill');
+      if (fill) fill.style.width = `${bar.dataset.level}%`;
+    });
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const fill = entry.target.querySelector('.bar-fill');
+        if (fill) fill.style.width = `${entry.target.dataset.level}%`;
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  bars.forEach(bar => observer.observe(bar));
+}
+
+// ==========================================================================
+// CONTACT FORM (AJAX submit via FormSubmit — no page reload)
+// ==========================================================================
+function initContactForm() {
+  const form = $('contactForm');
+  const note = $('formNote');
+  const submitBtn = $('contactSubmit');
+  if (!form) return;
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!note || !submitBtn) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    note.textContent = '';
+    note.classList.remove('success', 'error');
+
+    try {
+      const formData = new FormData(form);
+      const res = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: formData
+      });
+
+      if (!res.ok) throw new Error('Request failed');
+
+      note.textContent = 'Message sent — thanks, I\u2019ll reply soon ✓';
+      note.classList.add('success');
+      form.reset();
+      showToast('Message sent ✓');
+    } catch (err) {
+      note.textContent = 'Could not send — email me directly at ' + EMAIL;
+      note.classList.add('error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Message';
+    }
   });
 }
 
@@ -250,6 +430,25 @@ function fetchGitHubStats() {
 }
 
 // ==========================================================================
+// SESSION UPTIME (honest, real — time since this page load, not fake stats)
+// ==========================================================================
+function initUptime() {
+  const el = $('session-uptime');
+  if (!el) return;
+
+  setInterval(() => {
+    const seconds = Math.floor((Date.now() - pageLoadTime) / 1000);
+    if (seconds < 60) {
+      el.textContent = `${seconds}s`;
+    } else {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      el.textContent = `${mins}m ${secs}s`;
+    }
+  }, 1000);
+}
+
+// ==========================================================================
 // SCROLL REVEAL
 // ==========================================================================
 function initScrollReveal() {
@@ -277,16 +476,29 @@ function initScrollReveal() {
 }
 
 // ==========================================================================
-// CURSOR GLOW
+// CURSOR GLOW (rAF-throttled + transform-only, avoids layout thrashing)
 // ==========================================================================
 function initCursorGlow() {
   const glow = $('cursor-glow');
-  if (!glow || prefersReducedMotion()) return;
+  if (!glow || prefersReducedMotion() || window.matchMedia('(hover: none)').matches) return;
+
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight / 2;
+  let ticking = false;
+
+  function render() {
+    glow.style.transform = `translate3d(${targetX - 210}px, ${targetY - 210}px, 0)`;
+    ticking = false;
+  }
 
   window.addEventListener('mousemove', e => {
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
-  });
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(render);
+    }
+  }, { passive: true });
 }
 
 // ==========================================================================
@@ -308,12 +520,13 @@ const commands = [
     action: () => window.open(`https://github.com/${GITHUB_USER}`, '_blank'),
     keys: 'github'
   },
-  { label: 'Open Terminal', action: openTerminal, keys: 'terminal sudo' }
+  { label: 'Open Terminal', action: openTerminal, keys: 'terminal sudo' },
+  { label: 'Matrix Rain', action: startMatrixRain, keys: 'matrix rain' }
 ];
 
 function scrollToSection(selector) {
   closeCommandPalette();
-  document.querySelector(selector)?.scrollIntoView({ behavior: 'smooth' });
+  document.querySelector(selector)?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
 
 function renderPaletteItems(filter = '') {
@@ -326,7 +539,7 @@ function renderPaletteItems(filter = '') {
   paletteList.innerHTML = filtered
     .map(
       (cmd, i) =>
-        `<li role="option" data-index="${i}" class="${i === 0 ? 'active' : ''}">${escapeHtml(cmd.label)}<span>↵</span></li>`
+        `<li role="option" aria-selected="${i === 0}" data-index="${i}" class="${i === 0 ? 'active' : ''}">${escapeHtml(cmd.label)}<span>↵</span></li>`
     )
     .join('');
 
@@ -378,11 +591,19 @@ if (paletteInput) {
     } else if (e.key === 'Escape') {
       closeCommandPalette();
       return;
+    } else if (e.key === 'Tab') {
+      // simple focus trap: keep focus inside the palette panel
+      e.preventDefault();
+      paletteInput.focus();
+      return;
     } else {
       return;
     }
 
-    items.forEach((li, i) => li.classList.toggle('active', i === index));
+    items.forEach((li, i) => {
+      li.classList.toggle('active', i === index);
+      li.setAttribute('aria-selected', String(i === index));
+    });
   });
 }
 
@@ -402,7 +623,7 @@ if (paletteList) {
 // ==========================================================================
 // TERMINAL EASTER EGG
 // ==========================================================================
-let keyBuffer = '';
+let keyBuffer = ''; // tracks recent keystrokes globally to detect typed "sudo"/"matrix"
 const terminalOverlay = $('terminal-overlay');
 const terminalInput = $('terminal-input');
 const terminalOutput = $('terminal-output');
@@ -460,10 +681,13 @@ window.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
   keyBuffer += e.key.toLowerCase();
-  if (keyBuffer.length > 10) keyBuffer = keyBuffer.slice(-10);
+  if (keyBuffer.length > 12) keyBuffer = keyBuffer.slice(-12);
 
   if (keyBuffer.includes('sudo')) {
     openTerminal();
+    keyBuffer = '';
+  } else if (keyBuffer.includes('matrix')) {
+    startMatrixRain();
     keyBuffer = '';
   }
 });
@@ -479,7 +703,7 @@ if (terminalInput) {
     switch (command) {
       case 'help':
         appendTerminal(
-          `<p>Commands: <span class="term-highlight">about</span>, <span class="term-highlight">projects</span>, <span class="term-highlight">theme</span>, <span class="term-highlight">email</span>, <span class="term-highlight">chess</span>, <span class="term-highlight">neofetch</span>, <span class="term-highlight">clear</span>, <span class="term-highlight">exit</span></p>`
+          `<p>Commands: <span class="term-highlight">about</span>, <span class="term-highlight">projects</span>, <span class="term-highlight">theme</span>, <span class="term-highlight">email</span>, <span class="term-highlight">chess</span>, <span class="term-highlight">neofetch</span>, <span class="term-highlight">matrix</span>, <span class="term-highlight">clear</span>, <span class="term-highlight">exit</span></p>`
         );
         break;
       case 'about':
@@ -504,6 +728,10 @@ if (terminalInput) {
       case 'neofetch':
         appendTerminal(`<pre class="terminal-ascii">${escapeHtml(getNeofetchAscii())}</pre>`);
         break;
+      case 'matrix':
+        appendTerminal('<p>Launching matrix rain...</p>');
+        startMatrixRain();
+        break;
       case 'clear':
         terminalOutput.innerHTML = '';
         break;
@@ -519,6 +747,61 @@ if (terminalInput) {
 }
 
 // ==========================================================================
+// MATRIX RAIN EASTER EGG
+// ==========================================================================
+let matrixAnimationId = null;
+
+function startMatrixRain() {
+  if (prefersReducedMotion()) {
+    showToast('Matrix rain skipped (reduced motion is on)');
+    return;
+  }
+
+  const canvas = $('matrix-canvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.classList.add('active');
+
+  const chars = 'アイウエオカキクケコサシスセソ01';
+  const fontSize = 16;
+  const columns = Math.floor(canvas.width / fontSize);
+  const drops = new Array(columns).fill(1);
+
+  function draw() {
+    ctx.fillStyle = 'rgba(3, 7, 18, 0.08)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#22c55e';
+    ctx.font = `${fontSize}px monospace`;
+
+    drops.forEach((y, i) => {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(char, i * fontSize, y * fontSize);
+      drops[i] = y * fontSize > canvas.height && Math.random() > 0.975 ? 0 : y + 1;
+    });
+
+    matrixAnimationId = requestAnimationFrame(draw);
+  }
+
+  draw();
+  showToast('Matrix rain — click anywhere to stop');
+
+  function stop() {
+    cancelAnimationFrame(matrixAnimationId);
+    canvas.classList.remove('active');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    window.removeEventListener('click', stop);
+    window.removeEventListener('keydown', stop);
+  }
+
+  setTimeout(stop, 6000);
+  window.addEventListener('click', stop, { once: true });
+  window.addEventListener('keydown', stop, { once: true });
+}
+
+// ==========================================================================
 // PAGE INIT (safe — every line checks elements first)
 // ==========================================================================
 function initPage() {
@@ -526,8 +809,14 @@ function initPage() {
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
   initScrollReveal();
+  initScrollSpy();
   initCursorGlow();
   initCopyButtons();
+  initShareButton();
+  initProjectFilter();
+  initSkillBars();
+  initContactForm();
+  initUptime();
   fetchChessRating();
   fetchGitHubStats();
 }
@@ -537,6 +826,14 @@ if (document.readyState === 'loading') {
 } else {
   initPage();
 }
+
+window.addEventListener('resize', () => {
+  const canvas = $('matrix-canvas');
+  if (canvas && canvas.classList.contains('active')) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+});
 
 // Expose for inline onclick handlers in HTML
 window.toggleMenu = toggleMenu;
