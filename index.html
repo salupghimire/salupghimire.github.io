@@ -1,351 +1,517 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ===== Core SEO ===== -->
-  <title>Salup Ghimire | Front-End Developer & Python Enthusiast</title>
-  <meta name="description" content="Portfolio of Salup Ghimire — Front-End Developer building clean, fast interfaces, exploring Python, and thinking in chess strategy. Based in Nepal." />
-  <meta name="keywords" content="Salup Ghimire, Front-End Developer, Python Developer, Web Developer Nepal, Chess Player Developer" />
-  <meta name="author" content="Salup Ghimire" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://salupghimire.github.io/" />
-  <meta name="theme-color" content="#06b6d4" />
+<title>Salup Ghimire — Python Developer &amp; Front-End Developer</title>
+<meta name="description" content="Salup Ghimire is a Grade 12 student in Nepal learning Python and front-end development, building small projects and studying chess along the way." />
+<meta name="keywords" content="Salup Ghimire, Python Developer, Front-End Developer, Nepal, Student Developer, Chess" />
+<meta name="author" content="Salup Ghimire" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://salupghimire.github.io/" />
+<meta name="theme-color" content="#F6F1E7" />
 
-  <!-- ===== Open Graph ===== -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://salupghimire.github.io/" />
-  <meta property="og:title" content="Salup Ghimire | Front-End Developer & Python Enthusiast" />
-  <meta property="og:description" content="Front-End Developer · Python · Chess. Clean interfaces, careful structure, precise execution." />
-  <meta property="og:image" content="https://salupghimire.github.io/og-image.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://salupghimire.github.io/" />
+<meta property="og:title" content="Salup Ghimire — Python Developer & Front-End Developer" />
+<meta property="og:description" content="Grade 12 student in Nepal, learning Python and front-end development, building small projects and studying chess." />
+<meta property="og:locale" content="en_US" />
 
-  <!-- ===== Twitter Card ===== -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Salup Ghimire | Front-End Developer" />
-  <meta name="twitter:description" content="Front-End Developer · Python · Chess." />
-  <meta name="twitter:image" content="https://salupghimire.github.io/og-image.jpg" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Salup Ghimire — Python Developer & Front-End Developer" />
+<meta name="twitter:description" content="Grade 12 student in Nepal, learning Python and front-end development, building small projects and studying chess." />
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&gt;_</text></svg>" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23F6F1E7'/%3E%3Cpath d='M25 12c-1.6-1.6-4-2.2-6.2-1.5-2.7.9-3.9 3.6-2.5 5.6 1 1.4 2.9 1.9 5.4 2.6 3.1.9 5.6 2 6.4 4.4 1.1 3.3-1.5 6.6-5.6 7.4-3 .6-6-.2-8-2.1' stroke='%23B97046' stroke-width='3.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="preload" as="image" href="salup.jpg" />
-  <link rel="stylesheet" href="style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=Work+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
 
-  <!-- Prevent theme flash -->
-  <script>
-    (function () {
-      var saved = localStorage.getItem('theme');
-      if (saved === 'light' || saved === 'dark') {
-        document.documentElement.setAttribute('data-theme', saved);
-      } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-        document.documentElement.setAttribute('data-theme', 'light');
-      }
-    })();
-  </script>
-
-  <!-- ===== JSON-LD: Person schema ===== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Salup Ghimire",
-    "url": "https://salupghimire.github.io/",
-    "jobTitle": "Front-End Developer",
-    "knowsAbout": ["JavaScript", "HTML", "CSS", "Python", "Chess"],
-    "sameAs": [
-      "https://github.com/salupghimire",
-      "https://www.chess.com/member/salup_ghimire"
-    ]
-  }
-  </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Salup Ghimire",
+  "url": "https://salupghimire.github.io/",
+  "jobTitle": "Student · Python Developer · Front-End Developer",
+  "affiliation": { "@type": "CollegeOrUniversity", "name": "Divya College" },
+  "knowsAbout": ["Python", "HTML", "CSS", "JavaScript", "Chess"],
+  "sameAs": [
+    "https://github.com/salupghimire",
+    "https://www.chess.com/member/salup_ghimire",
+    "https://x.com/SalupGhimire32",
+    "https://www.facebook.com/salup.ghimire/"
+  ]
+}
+</script>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to content</a>
+<a href="#main-content" class="skip-link">Skip to content</a>
 
-  <div id="cursor-glow" aria-hidden="true"></div>
-  <div id="scroll-progress" role="progressbar" aria-label="Scroll progress" aria-valuemin="0" aria-valuemax="100"></div>
+<div id="cursor-dot" aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
+<div id="cursor-label" aria-hidden="true"></div>
 
-  <!-- Loader -->
-  <div id="loader" aria-hidden="false">
-    <div class="loader-inner">
-      <span class="loader-prompt">$</span>
-      <span class="loader-text">booting portfolio...</span>
-      <span class="loader-cursor">|</span>
+<div id="loader" aria-hidden="true">
+  <svg class="loader-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect width="40" height="40" rx="9" fill="none" stroke="#DFD5C0" stroke-width="1.5"/>
+    <path d="M25 12c-1.6-1.6-4-2.2-6.2-1.5-2.7.9-3.9 3.6-2.5 5.6 1 1.4 2.9 1.9 5.4 2.6 3.1.9 5.6 2 6.4 4.4 1.1 3.3-1.5 6.6-5.6 7.4-3 .6-6-.2-8-2.1" stroke="#B97046" stroke-width="3.2" stroke-linecap="round"/>
+  </svg>
+</div>
+
+<header class="main-header" id="siteHeader">
+  <nav class="nav" aria-label="Main navigation">
+    <a href="#hero" class="logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x=".75" y=".75" width="38.5" height="38.5" rx="9" stroke="currentColor" stroke-width="1.3" opacity=".35"/>
+        <path d="M25 12c-1.6-1.6-4-2.2-6.2-1.5-2.7.9-3.9 3.6-2.5 5.6 1 1.4 2.9 1.9 5.4 2.6 3.1.9 5.6 2 6.4 4.4 1.1 3.3-1.5 6.6-5.6 7.4-3 .6-6-.2-8-2.1" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-text">Salup <span class="thin">Ghimire</span></span>
+    </a>
+
+    <div class="nav-desktop" id="navDesktop">
+      <a href="#about" data-section="about">About</a>
+      <a href="#journey" data-section="journey">Journey</a>
+      <a href="#skills" data-section="skills">Skills</a>
+      <a href="#projects" data-section="projects">Projects</a>
+      <a href="#resume" data-section="resume">Resume</a>
+      <a href="#contact" data-section="contact">Contact</a>
     </div>
-  </div>
 
-  <!-- Status bar -->
-  <div class="status-bar" aria-label="Live status">
-    <span class="status-dot" aria-hidden="true"></span>
-    <span>ONLINE</span>
-    <span class="status-sep">·</span>
-    <span id="status-location">Nepal</span>
-    <span class="status-sep">·</span>
-    <span class="hide-xs">Rapid: <strong id="live-chess-rating">...</strong></span>
-    <span class="status-sep hide-xs">·</span>
-    <span class="hide-xs">Repos: <strong id="live-github-repos">...</strong></span>
-    <span class="status-sep">·</span>
-    <span>Up: <strong id="session-uptime">0s</strong></span>
-  </div>
-
-  <!-- Header -->
-  <header class="main-header">
-    <nav class="nav" aria-label="Main navigation">
-      <a href="#hero" class="logo">
-        <span class="logo-mark">&gt;_</span>
-        <span class="logo-text">salup.dev</span>
-      </a>
-
-      <div class="nav-desktop">
-        <a href="#about" data-section="about">about</a>
-        <a href="#skills" data-section="skills">skills</a>
-        <a href="#projects" data-section="projects">projects</a>
-        <a href="#contact" data-section="contact">contact</a>
-        <button type="button" id="cmdHint" class="cmd-hint" title="Open command palette (Ctrl+K)">
-          <kbd>Ctrl</kbd><kbd>K</kbd>
-        </button>
-      </div>
-
-      <button type="button" id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
-      <button type="button" class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" onclick="toggleMenu()">☰</button>
-    </nav>
-  </header>
-
-  <!-- Mobile nav -->
-  <div id="mobileBackdrop" class="mobile-backdrop" aria-hidden="true" onclick="closeMobileNav()"></div>
-  <nav id="mobileNav" class="mobile-nav" aria-hidden="true" aria-label="Mobile navigation">
-    <a href="#about" data-section="about" onclick="closeMobileNav()">about</a>
-    <a href="#skills" data-section="skills" onclick="closeMobileNav()">skills</a>
-    <a href="#projects" data-section="projects" onclick="closeMobileNav()">projects</a>
-    <a href="#contact" data-section="contact" onclick="closeMobileNav()">contact</a>
-    <button type="button" class="mobile-cmd-btn" onclick="openCommandPalette(); closeMobileNav();">⌘ Command Palette</button>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span>
+    </button>
   </nav>
+</header>
 
-  <main id="main-content">
-    <!-- Hero -->
-    <section id="hero" class="hero reveal">
-      <img src="salup.jpg" alt="Salup Ghimire profile photo" class="profile-photo" width="130" height="130" loading="eager" />
+<div id="mobileBackdrop" class="mobile-backdrop"></div>
+<nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
+  <a href="#about" data-section="about">About</a>
+  <a href="#journey" data-section="journey">Journey</a>
+  <a href="#skills" data-section="skills">Skills</a>
+  <a href="#projects" data-section="projects">Projects</a>
+  <a href="#resume" data-section="resume">Resume</a>
+  <a href="#contact" data-section="contact">Contact</a>
+  <p class="mobile-meta">Kathmandu, Nepal</p>
+</nav>
 
-      <div class="hero-terminal">
-        <div class="hero-terminal-bar">
-          <span></span><span></span><span></span>
-          <span class="hero-terminal-title">~/salup/portfolio</span>
-        </div>
-        <div class="hero-terminal-body">
-          <p class="hero-terminal-line">
-            <span class="prompt">$</span> whoami
-          </p>
-          <p class="hero-terminal-output">Salup Ghimire</p>
-          <p class="hero-terminal-line">
-            <span class="prompt">$</span> role --current
-          </p>
-          <p class="hero-terminal-output">
-            <span id="typing">&nbsp;</span><span class="typing-cursor" aria-hidden="true">|</span>
-          </p>
-          <p class="hero-terminal-line muted">
-            <span class="prompt">$</span> hint --easter-egg <span class="term-dim"># try typing "sudo" or "matrix" anywhere</span>
-          </p>
-        </div>
-      </div>
+<main id="main-content">
+
+  <section id="hero" class="hero reveal">
+    <div class="hero-copy">
+      <p class="hero-eyebrow"><span class="dot" aria-hidden="true"></span> Grade 12 · Divya College, Nepal</p>
+      <h1 class="hero-name">Salup<span class="last">Ghimire</span></h1>
+      <p class="hero-role"><span id="typingText">Python Developer</span><span class="type-cursor" aria-hidden="true"></span></p>
+      <p class="hero-statement">Learning, building, and exploring through code, mathematics, and chess.</p>
 
       <div class="hero-actions">
         <a href="#projects" class="btn">View Projects</a>
-        <a href="https://github.com/salupghimire" class="btn secondary" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <button type="button" class="btn ghost" id="shareBtn">Share</button>
-      </div>
-    </section>
-
-    <!-- About -->
-    <section id="about" class="section reveal" aria-labelledby="about-heading">
-      <h2 id="about-heading" class="section-title"><span class="prompt">#</span> about</h2>
-      <p class="section-lead">
-        Developer and student building clean interfaces and experimenting with Python.
-        I treat code like chess: plan the structure, then execute precisely.
-      </p>
-      <p class="learning-line">
-        <span class="channel-title">currently learning</span>
-        Python · Chess · Web Technology
-      </p>
-    </section>
-
-    <!-- Skills -->
-    <section id="skills" class="section reveal" aria-labelledby="skills-heading">
-      <h2 id="skills-heading" class="section-title"><span class="prompt">#</span> stack</h2>
-      <pre class="package-json" aria-label="Tech stack"><code>{
-  <span class="json-key">"frontend"</span>: [<span class="json-str">"HTML"</span>, <span class="json-str">"CSS"</span>, <span class="json-str">"JavaScript"</span>],
-  <span class="json-key">"backend"</span>:  [<span class="json-str">"Python"</span>],
-  <span class="json-key">"tools"</span>:    [<span class="json-str">"Git"</span>, <span class="json-str">"VS Code"</span>, <span class="json-str">"Linux"</span>],
-  <span class="json-key">"interests"</span>: [<span class="json-str">"Chess"</span>, <span class="json-str">"Open Source"</span>]
-}</code></pre>
-
-      <div class="build-log" aria-label="Skill proficiency">
-        <p class="build-log-cmd"><span class="prompt">$</span> npm run build:skills</p>
-
-        <div class="skill-bar" data-level="85">
-          <div class="skill-bar-top">
-            <span class="skill-name">HTML / CSS</span>
-            <span class="skill-pct">85%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill"></div></div>
-        </div>
-
-        <div class="skill-bar" data-level="75">
-          <div class="skill-bar-top">
-            <span class="skill-name">JavaScript</span>
-            <span class="skill-pct">75%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill"></div></div>
-        </div>
-
-        <div class="skill-bar" data-level="65">
-          <div class="skill-bar-top">
-            <span class="skill-name">Python</span>
-            <span class="skill-pct">65%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill"></div></div>
-        </div>
-
-        <div class="skill-bar" data-level="70">
-          <div class="skill-bar-top">
-            <span class="skill-name">Git / CLI</span>
-            <span class="skill-pct">70%</span>
-          </div>
-          <div class="bar-track"><div class="bar-fill"></div></div>
-        </div>
-
-        <p class="build-log-done">✓ build complete <span class="term-dim">(0 errors, 4 modules)</span></p>
-      </div>
-    </section>
-
-    <!-- Projects -->
-    <section id="projects" class="section reveal" aria-labelledby="projects-heading">
-      <h2 id="projects-heading" class="section-title"><span class="prompt">#</span> projects</h2>
-
-      <div class="filter-bar" role="group" aria-label="Filter projects by language">
-        <button type="button" class="filter-btn active" data-filter="all">All</button>
-        <button type="button" class="filter-btn" data-filter="js">JavaScript</button>
-        <button type="button" class="filter-btn" data-filter="py">Python</button>
+        <a href="#resume" class="btn secondary">View Resume</a>
       </div>
 
-      <div class="grid" id="projectGrid">
-        <article class="card project-card" data-tag="js">
-          <div class="repo-meta">
-            <span class="repo-name">salup/portfolio-v2</span>
-            <span class="repo-badge">main</span>
+      <div class="hero-social" aria-label="Social links">
+        <a href="https://github.com/salupghimire" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+        </a>
+        <a href="https://www.chess.com/member/salup_ghimire" target="_blank" rel="noopener noreferrer" aria-label="Chess.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c-1.4 0-2.4 1.1-2.4 2.3 0 .8.4 1.4.9 1.9-1 .5-1.7 1.5-1.9 2.8h6.8c-.2-1.3-.9-2.3-1.9-2.8.5-.5.9-1.1.9-1.9C14.4 4.1 13.4 3 12 3Z"/><path d="M8.5 12h7l1 4H7.5l1-4Z"/><path d="M6.5 21v-2.2c0-.6.5-1.1 1.1-1.1h8.8c.6 0 1.1.5 1.1 1.1V21"/><path d="M5 21h14"/></svg>
+        </a>
+        <a href="https://x.com/SalupGhimire32" target="_blank" rel="noopener noreferrer" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l16 16M20 4 4 20"/></svg>
+        </a>
+        <a href="https://www.facebook.com/salup.ghimire/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 8.5h-2c-.6 0-1 .6-1 1.3V12h3l-.4 3h-2.6v7h-3v-7H7v-3h2V9.5C9 7 10.6 5 13 5h2v3.5Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section reveal" aria-labelledby="about-heading">
+    <div class="section-inner">
+      <p class="eyebrow">About</p>
+      <div class="about-grid">
+        <div>
+          <p class="about-lead">I'm a Grade&nbsp;12 student in Nepal, <em>learning by building</em> rather than reading about it.</p>
+          <div class="about-body">
+            <p>I study at Divya College, and most of my free time usually ends up going into coding. I spend a lot of it working with Python, building front-end interfaces, and trying to figure out why something that worked five minutes ago suddenly doesn't.</p>
+            <p>I'm still learning, so I don't want to pretend I know everything. I enjoy building things, getting stuck, breaking things, and eventually figuring out what went wrong. That's probably what keeps me interested in programming.</p>
+            <p>Outside of coding, I play chess and study mathematics. I like both for a similar reason: you usually have to look at a problem from a few different angles before things start making sense.</p>
+            <p>Right now, I'm focusing on getting better at web development and Python while slowly learning how AI and machine learning actually work. I'm still at the beginning, but I'm enjoying the process of figuring it out.</p>
           </div>
-          <span class="repo-lang"><span class="lang-dot js"></span> JavaScript</span>
-          <h3>Personal Portfolio</h3>
-          <p>Dark-mode developer portfolio with live APIs, command palette, and terminal easter egg.</p>
-          <div class="repo-actions">
-            <a href="https://github.com/salupghimire/portfolio" class="repo-link" target="_blank" rel="noopener">Code</a>
-            <button type="button" class="repo-copy" data-copy="https://github.com/salupghimire/portfolio">Copy clone URL</button>
+          <div class="about-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Front-End</span>
+            <span class="tag">Problem Solving</span>
+            <span class="tag">Mathematics</span>
+            <span class="tag">Chess</span>
+          </div>
+        </div>
+
+        <div class="about-note">
+          <p><strong id="about-heading" class="about-note-title">What I'm actually doing day to day</strong></p>
+          <p>Working through Python fundamentals, rebuilding this site by hand, and reading a bit of chess theory between assignments.</p>
+          <p>No internships, no company work yet — just consistent practice and a few finished projects.</p>
+          <span class="handwritten">— still very much a work in progress</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="journey" class="section reveal" aria-labelledby="journey-heading">
+    <div class="section-inner">
+      <p class="eyebrow">Journey</p>
+      <div class="section-head">
+        <h2 id="journey-heading" class="section-title size-sm">Education and journey</h2>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <p class="timeline-tag">Grade 10</p>
+          <h3 class="timeline-title">Technical Pashupati Secondary School</h3>
+          <p class="timeline-desc">Finished secondary school here — the first place I got curious about how computers actually work, not just how to use them.</p>
+          <p class="timeline-gpa">GPA: <strong>3.96</strong>&nbsp;/&nbsp;4</p>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <p class="timeline-tag">Grade 12 · Current</p>
+          <h3 class="timeline-title">Divya College</h3>
+          <p class="timeline-desc">Currently studying here while teaching myself Python and front-end development alongside coursework.</p>
+          <div class="timeline-focus">
+            <span class="tag">Python</span>
+            <span class="tag">HTML / CSS / JS</span>
+            <span class="tag">Git &amp; GitHub</span>
+            <span class="tag">Mathematics</span>
+            <span class="tag">Chess</span>
+          </div>
+        </div>
+
+        <div class="timeline-item is-future">
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <p class="timeline-tag">Exploring next</p>
+          <h3 class="timeline-title">Computer Science · Software Engineering · AI/ML</h3>
+          <p class="timeline-desc">Where I'm looking for what comes after Grade 12 — nothing decided yet, just genuinely interested in all three.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal" aria-labelledby="learning-heading">
+    <div class="section-inner">
+      <p class="eyebrow">Right now</p>
+      <div class="section-head">
+        <h2 id="learning-heading" class="section-title">Currently Learning</h2>
+      </div>
+
+      <div class="learning-grid">
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">Python</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Daily practice</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">HTML</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Comfortable</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">CSS</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Comfortable</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">JavaScript</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Learning steadily</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">Git</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Using regularly</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">GitHub</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Using regularly</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">Problem Solving</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Ongoing</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">Mathematics</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Ongoing</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">Chess</span><span class="learn-card-pulse" aria-hidden="true"></span></div><p class="learn-card-status">Ongoing</p></div>
+        <div class="learn-card"><div class="learn-card-top"><span class="learn-card-name">AI / ML</span><span class="learn-card-pulse new" aria-hidden="true"></span></div><p class="learn-card-status">Just starting out</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="section reveal" aria-labelledby="skills-heading">
+    <div class="section-inner">
+      <p class="eyebrow">What I use</p>
+      <div class="section-head">
+        <h2 id="skills-heading" class="section-title">Skills</h2>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-group">
+          <p class="skill-group-title">Programming</p>
+          <ul><li>Python</li></ul>
+        </div>
+        <div class="skill-group">
+          <p class="skill-group-title">Web</p>
+          <ul><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+        </div>
+        <div class="skill-group">
+          <p class="skill-group-title">Tools</p>
+          <ul><li>Git</li><li>GitHub</li><li>VS Code</li></ul>
+        </div>
+        <div class="skill-group">
+          <p class="skill-group-title">Thinking</p>
+          <ul><li>Problem Solving</li><li>Mathematics</li><li>Chess</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section reveal" aria-labelledby="projects-heading">
+    <div class="section-inner">
+      <p class="eyebrow">Selected work</p>
+      <div class="section-head">
+        <h2 id="projects-heading" class="section-title">Projects</h2>
+      </div>
+
+      <div class="project-list" id="projectList">
+
+        <article class="project-card" data-project>
+          <button type="button" class="project-trigger" aria-expanded="false" data-cursor="View">
+            <span class="project-icon" aria-hidden="true">🎲</span>
+            <span class="project-trigger-text">
+              <span class="project-name">ASCII Dice Roller</span>
+              <span class="project-tagline">Python · Terminal</span>
+            </span>
+            <svg class="project-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="project-panel" hidden>
+            <p class="project-desc">A Python terminal-based dice roller that lets users roll one or multiple dice. It displays each die using ASCII art and calculates the total result.</p>
+            <div class="project-tech">
+              <span class="tag">Python</span>
+              <span class="tag">ASCII art</span>
+              <span class="tag">CLI</span>
+            </div>
+            <a href="https://github.com/salupghimire/ascii-dice-roller" class="btn small secondary" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+              View on GitHub
+            </a>
           </div>
         </article>
 
-        <article class="card project-card" data-tag="py">
-          <div class="repo-meta">
-            <span class="repo-name">salup/chess-tools</span>
-            <span class="repo-badge">dev</span>
-          </div>
-          <span class="repo-lang"><span class="lang-dot py"></span> Python</span>
-          <h3>Chess Analysis Scripts</h3>
-          <p>Python utilities for parsing games and exploring opening patterns from PGN files.</p>
-          <div class="repo-actions">
-            <a href="https://github.com/salupghimire/chess-tools" class="repo-link" target="_blank" rel="noopener">Code</a>
-            <button type="button" class="repo-copy" data-copy="https://github.com/salupghimire/chess-tools">Copy clone URL</button>
+        <article class="project-card" data-project>
+          <button type="button" class="project-trigger" aria-expanded="false" data-cursor="View">
+            <span class="project-icon" aria-hidden="true">⏰</span>
+            <span class="project-trigger-text">
+              <span class="project-name">Python Alarm Clock</span>
+              <span class="project-tagline">Python · pygame</span>
+            </span>
+            <svg class="project-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="project-panel" hidden>
+            <p class="project-desc">A Python alarm clock that allows users to set an alarm and plays an alert sound when the specified time is reached. It uses <code>pygame</code> for audio playback and demonstrates time handling, loops, and user input.</p>
+            <div class="project-tech">
+              <span class="tag">Python</span>
+              <span class="tag">pygame</span>
+              <span class="tag">Time handling</span>
+            </div>
+            <a href="https://github.com/salupghimire/python-alarm-clock" class="btn small secondary" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+              View on GitHub
+            </a>
           </div>
         </article>
+
+        <article class="project-card" data-project>
+          <button type="button" class="project-trigger" aria-expanded="false" data-cursor="View">
+            <span class="project-icon" aria-hidden="true">🔢</span>
+            <span class="project-trigger-text">
+              <span class="project-name">Sort Machine</span>
+              <span class="project-tagline">Python · Algorithms</span>
+            </span>
+            <svg class="project-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="project-panel" hidden>
+            <p class="project-desc">A Python sorting project that takes a collection of values and organizes them into sorted order, demonstrating fundamental programming concepts such as loops, comparisons, and algorithmic thinking.</p>
+            <div class="project-tech">
+              <span class="tag">Python</span>
+              <span class="tag">Sorting</span>
+              <span class="tag">Algorithms</span>
+            </div>
+            <a href="https://github.com/salupghimire/Slot-machine-game" class="btn small secondary" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+              View on GitHub
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="chess" class="section chess-section reveal" aria-labelledby="chess-heading">
+    <div class="section-inner">
+      <div class="chess-strip">
+        <div class="chess-copy">
+          <p class="eyebrow">Chess</p>
+          <h2 id="chess-heading" class="section-title">Off the clock</h2>
+          <p>I play chess regularly — mostly online, mostly for fun. Same habit as coding: slow down, find the pattern, then move.</p>
+          <p class="rating-badge" id="chessRatingBadge" hidden>
+            <span class="rating-dot" aria-hidden="true"></span>
+            Live rapid rating
+            <strong id="chessRating">—</strong>
+          </p>
+        </div>
+        <a href="https://www.chess.com/member/salup_ghimire" class="social-icon-link" target="_blank" rel="noopener noreferrer" aria-label="Chess.com profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c-1.4 0-2.4 1.1-2.4 2.3 0 .8.4 1.4.9 1.9-1 .5-1.7 1.5-1.9 2.8h6.8c-.2-1.3-.9-2.3-1.9-2.8.5-.5.9-1.1.9-1.9C14.4 4.1 13.4 3 12 3Z"/><path d="M8.5 12h7l1 4H7.5l1-4Z"/><path d="M6.5 21v-2.2c0-.6.5-1.1 1.1-1.1h8.8c.6 0 1.1.5 1.1 1.1V21"/><path d="M5 21h14"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal" aria-labelledby="github-heading">
+    <div class="section-inner">
+      <div class="github-strip">
+        <div class="github-strip-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+          <div>
+            <h2 id="github-heading" class="github-strip-title">Code lives on GitHub</h2>
+            <p class="github-strip-sub">@salupghimire</p>
+          </div>
+        </div>
+        <a href="https://github.com/salupghimire" class="btn secondary" target="_blank" rel="noopener noreferrer" data-cursor="Open">View my GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="resume" class="section reveal" aria-labelledby="resume-heading">
+    <div class="section-inner">
+      <div class="section-head">
+        <h2 id="resume-heading" class="section-title">Resume</h2>
       </div>
 
-      <p class="filter-empty" id="filterEmpty" hidden>No projects match this filter yet — more in progress.</p>
-    </section>
+      <div class="resume-panel">
+        <div>
+          <div class="resume-col">
+            <p class="resume-block-title">Education</p>
+            <div class="resume-edu-item">
+              <p class="resume-edu-school">Divya College</p>
+              <p class="resume-edu-grade">Grade 12 · Current</p>
+            </div>
+            <div class="resume-edu-item">
+              <p class="resume-edu-school">Technical Pashupati Secondary School</p>
+              <p class="resume-edu-grade">Grade 10 · GPA 3.96/4</p>
+            </div>
+          </div>
 
-    <!-- Contact -->
-    <section id="contact" class="section reveal" aria-labelledby="contact-heading">
-      <h2 id="contact-heading" class="section-title"><span class="prompt">#</span> contact</h2>
+          <div class="resume-col">
+            <p class="resume-block-title">Technical Skills</p>
+            <ul class="resume-list">
+              <li>Python</li>
+              <li>HTML / CSS / JavaScript</li>
+              <li>Git &amp; GitHub</li>
+              <li>VS Code</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <div class="resume-col">
+            <p class="resume-block-title">Core Interests</p>
+            <ul class="resume-list">
+              <li>Programming &amp; Web Development</li>
+              <li>Problem Solving &amp; Mathematics</li>
+              <li>Chess</li>
+              <li>Computer Science · Software Engineering · exploring AI/ML</li>
+            </ul>
+          </div>
+
+          <div class="resume-col">
+            <p class="resume-block-title">Profiles</p>
+            <div class="profile-icons" aria-label="Social profiles">
+              <a href="https://github.com/salupghimire" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+              </a>
+              <a href="https://www.chess.com/member/salup_ghimire" target="_blank" rel="noopener noreferrer" aria-label="Chess.com">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c-1.4 0-2.4 1.1-2.4 2.3 0 .8.4 1.4.9 1.9-1 .5-1.7 1.5-1.9 2.8h6.8c-.2-1.3-.9-2.3-1.9-2.8.5-.5.9-1.1.9-1.9C14.4 4.1 13.4 3 12 3Z"/><path d="M8.5 12h7l1 4H7.5l1-4Z"/><path d="M6.5 21v-2.2c0-.6.5-1.1 1.1-1.1h8.8c.6 0 1.1.5 1.1 1.1V21"/><path d="M5 21h14"/></svg>
+              </a>
+              <a href="https://x.com/SalupGhimire32" target="_blank" rel="noopener noreferrer" aria-label="X">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l16 16M20 4 4 20"/></svg>
+              </a>
+              <a href="https://www.facebook.com/salup.ghimire/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 8.5h-2c-.6 0-1 .6-1 1.3V12h3l-.4 3h-2.6v7h-3v-7H7v-3h2V9.5C9 7 10.6 5 13 5h2v3.5Z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="resume-download">
+        <a href="resume.pdf" class="btn" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/></svg>
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section reveal" aria-labelledby="contact-heading">
+    <div class="section-inner">
+      <p class="eyebrow">Get in touch</p>
+      <div class="section-head">
+        <h2 id="contact-heading" class="section-title">Let's build something.</h2>
+      </div>
+
       <div class="contact-layout">
-        <form class="contact-form" id="contactForm" action="https://formsubmit.co/salupghimire10@gmail.com" method="POST">
+        <form class="contact-form" id="contactForm" action="https://formsubmit.co/salupghimire10@gmail.com" method="POST" novalidate>
           <input type="hidden" name="_subject" value="New message from salupghimire.github.io" />
+          <input type="hidden" name="_template" value="table" />
           <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
 
           <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" required placeholder="Your name" />
+            <input type="text" id="name" name="name" required placeholder="Your name" autocomplete="name" />
+            <span class="field-error" id="name-error"></span>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required placeholder="you@email.com" />
+            <input type="email" id="email" name="email" required placeholder="you@email.com" autocomplete="email" />
+            <span class="field-error" id="email-error"></span>
           </div>
           <div class="form-group">
             <label for="message">Message</label>
             <textarea id="message" name="message" rows="5" required placeholder="Let's build something."></textarea>
+            <span class="field-error" id="message-error"></span>
           </div>
-          <button type="submit" class="btn" id="contactSubmit">Send Message</button>
+          <button type="submit" class="btn" id="contactSubmit" data-cursor="Send">Send Message</button>
           <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
         </form>
 
         <div class="contact-channels">
-          <button type="button" class="contact-card" onclick="copyEmail()">
-            <span class="channel-title">email</span>
-            <span id="email-detail">salupghimire10@gmail.com</span>
+          <button type="button" class="contact-card" id="copyEmailBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+            <span>
+              <span class="contact-card-label">Email</span>
+              <span class="contact-card-value">salupghimire10@gmail.com</span>
+            </span>
           </button>
-          <a href="https://github.com/salupghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
-            <span class="channel-title">github</span>
-            <span>@salupghimire</span>
-          </a>
-          <a href="https://www.chess.com/member/salup_ghimire" class="contact-card" target="_blank" rel="noopener noreferrer">
-            <span class="channel-title">chess.com</span>
-            <span>salup_ghimire · Rapid <strong id="live-chess-rating-2">...</strong></span>
-          </a>
+          <p class="contact-elsewhere">Or find me elsewhere — links are in the footer below.</p>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+</main>
 
-  <footer class="site-footer">
-    <p><span class="prompt">$</span> echo "Built with HTML, CSS & JS" · © <span id="year"></span> Salup Ghimire</p>
-    <p class="footer-hint">Press <kbd>Ctrl</kbd>+<kbd>K</kbd> for commands · type <kbd>sudo</kbd> for terminal</p>
-  </footer>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x=".75" y=".75" width="38.5" height="38.5" rx="9" stroke="currentColor" stroke-width="1.3" opacity=".35"/>
+        <path d="M25 12c-1.6-1.6-4-2.2-6.2-1.5-2.7.9-3.9 3.6-2.5 5.6 1 1.4 2.9 1.9 5.4 2.6 3.1.9 5.6 2 6.4 4.4 1.1 3.3-1.5 6.6-5.6 7.4-3 .6-6-.2-8-2.1" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <p class="footer-name">Salup Ghimire</p>
+      </div>
+    </div>
 
-  <!-- Back to top -->
-  <button type="button" id="backToTop" class="back-to-top" aria-label="Back to top">↑ top</button>
-
-  <!-- Command Palette -->
-  <div id="command-palette" class="command-palette" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Command palette">
-    <div class="palette-backdrop" onclick="closeCommandPalette()"></div>
-    <div class="palette-panel">
-      <input type="text" id="palette-input" placeholder="Type a command or search..." autocomplete="off" aria-label="Command search" />
-      <ul id="palette-list" class="palette-list" role="listbox"></ul>
+    <div class="footer-social">
+      <a href="https://github.com/salupghimire" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+      <a href="https://www.chess.com/member/salup_ghimire" target="_blank" rel="noopener noreferrer" aria-label="Chess.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c-1.4 0-2.4 1.1-2.4 2.3 0 .8.4 1.4.9 1.9-1 .5-1.7 1.5-1.9 2.8h6.8c-.2-1.3-.9-2.3-1.9-2.8.5-.5.9-1.1.9-1.9C14.4 4.1 13.4 3 12 3Z"/><path d="M8.5 12h7l1 4H7.5l1-4Z"/><path d="M6.5 21v-2.2c0-.6.5-1.1 1.1-1.1h8.8c.6 0 1.1.5 1.1 1.1V21"/><path d="M5 21h14"/></svg></a>
+      <a href="https://x.com/SalupGhimire32" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4l16 16M20 4 4 20"/></svg></a>
+      <a href="https://www.facebook.com/salup.ghimire/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 8.5h-2c-.6 0-1 .6-1 1.3V12h3l-.4 3h-2.6v7h-3v-7H7v-3h2V9.5C9 7 10.6 5 13 5h2v3.5Z"/></svg></a>
     </div>
   </div>
+  <p class="footer-meta">© <span id="year"></span> Salup Ghimire. All rights reserved.</p>
+</footer>
 
-  <!-- Terminal Easter Egg -->
-  <div id="terminal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Terminal">
-    <div class="terminal-header">
-      <span>salup@portfolio:~</span>
-      <button type="button" class="terminal-close" onclick="closeTerminal()" aria-label="Close terminal">[exit]</button>
-    </div>
-    <div id="terminal-output" class="terminal-body">
-      <p>Welcome to salupOS v2.0 — type <span class="term-highlight">help</span> for commands.</p>
-    </div>
-    <div class="terminal-input-line">
-      <span class="prompt">$</span>
-      <input type="text" id="terminal-input" aria-label="Terminal input" autocomplete="off" spellcheck="false" />
-    </div>
-  </div>
+<button type="button" id="backToTop" class="back-to-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
-  <!-- Matrix rain overlay -->
-  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- Toast -->
-  <div id="toast" class="toast" role="status" aria-live="polite" aria-hidden="true"></div>
-
-  <script src="script.js" defer></script>
+<script src="script.js" defer></script>
 </body>
 </html>
