@@ -1,844 +1,446 @@
-'use strict';
+(function () {
+  "use strict";
 
-// ==========================================================================
-// UTILITIES
-// ==========================================================================
-const EMAIL = 'salupghimire10@gmail.com';
-const CHESS_USER = 'salup_ghimire';
-const GITHUB_USER = 'salupghimire';
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-let chessRating = '...';
-const pageLoadTime = Date.now();
-
-function $(id) {
-  return document.getElementById(id);
-}
-
-function showToast(message) {
-  const toast = $('toast');
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.add('show');
-  toast.setAttribute('aria-hidden', 'false');
-  clearTimeout(showToast._timer);
-  showToast._timer = setTimeout(() => {
-    toast.classList.remove('show');
-    toast.setAttribute('aria-hidden', 'true');
-  }, 2500);
-}
-
-function setBodyScrollLocked(locked) {
-  document.body.style.overflow = locked ? 'hidden' : '';
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-// ==========================================================================
-// LOADER (runs first — won't get stuck)
-// ==========================================================================
-(function initLoader() {
+  /* --- quick loader, nothing fancy --- */
+  var loader = document.getElementById("loader");
   function hideLoader() {
-    const loader = $('loader');
-    if (!loader || loader.dataset.hidden === '1') return;
-    loader.dataset.hidden = '1';
-    loader.style.opacity = '0';
-    setTimeout(() => {
-      loader.style.display = 'none';
-      loader.style.pointerEvents = 'none';
-      loader.setAttribute('aria-hidden', 'true');
-      startTyping();
-    }, 400);
+    if (!loader) return;
+    loader.classList.add("hidden");
+    setTimeout(function () { loader.remove(); }, 400);
   }
-
-  if (document.readyState === 'complete') {
+  if (document.readyState === "complete") {
     hideLoader();
   } else {
-    window.addEventListener('load', hideLoader);
+    window.addEventListener("load", hideLoader, { once: true });
   }
-})();
+  setTimeout(hideLoader, 800);
 
-// ==========================================================================
-// TYPING EFFECT
-// ==========================================================================
-const typingSpan = $('typing');
-const words = ['Front-End Developer.', 'Python Enthusiast.', 'Chess Strategist.'];
-let wordIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
+  var yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-function startTyping() {
-  if (!typingSpan || prefersReducedMotion()) {
-    if (typingSpan) typingSpan.textContent = words[0];
-    return;
-  }
+  var header = document.getElementById("siteHeader");
+  var backToTop = document.getElementById("backToTop");
+  var navLinks = document.querySelectorAll("[data-section]");
+  var sections = [];
 
-  const currentWord = words[wordIndex];
-  charIndex += isDeleting ? -1 : 1;
-  typingSpan.textContent = currentWord.substring(0, charIndex) || '\u00A0';
-
-  let typeSpeed = isDeleting ? 50 : 100;
-
-  if (!isDeleting && charIndex === currentWord.length) {
-    typeSpeed = 2000;
-    isDeleting = true;
-  } else if (isDeleting && charIndex === 0) {
-    isDeleting = false;
-    wordIndex = (wordIndex + 1) % words.length;
-    typeSpeed = 500;
-  }
-
-  setTimeout(startTyping, typeSpeed);
-}
-
-// ==========================================================================
-// MOBILE MENU
-// ==========================================================================
-function closeMobileNav() {
-  const nav = $('mobileNav');
-  const backdrop = $('mobileBackdrop');
-  const toggle = document.querySelector('.nav-toggle');
-  if (nav) nav.setAttribute('aria-hidden', 'true');
-  if (backdrop) backdrop.setAttribute('aria-hidden', 'true');
-  if (toggle) toggle.setAttribute('aria-expanded', 'false');
-  setBodyScrollLocked(false);
-}
-
-function toggleMenu() {
-  const nav = $('mobileNav');
-  const backdrop = $('mobileBackdrop');
-  const toggle = document.querySelector('.nav-toggle');
-  if (!nav) return;
-
-  const isHidden = nav.getAttribute('aria-hidden') !== 'false';
-  const willOpen = isHidden;
-
-  nav.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
-  if (backdrop) backdrop.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
-  if (toggle) toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
-  setBodyScrollLocked(willOpen);
-}
-
-document.querySelectorAll('.mobile-nav a').forEach(link => {
-  link.addEventListener('click', closeMobileNav);
-});
-
-// ==========================================================================
-// THEME (toggle button now lives outside .nav-desktop, so it's always
-// visible — this is the fix for "dark mode missing on phone")
-// ==========================================================================
-const themeToggle = $('themeToggle');
-
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem('theme', theme);
-  if (themeToggle) {
-    themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
-    themeToggle.setAttribute(
-      'aria-label',
-      `Switch to ${theme === 'light' ? 'dark' : 'light'} mode`
-    );
-  }
-}
-
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme') || 'dark';
-  applyTheme(current === 'light' ? 'dark' : 'light');
-}
-
-if (themeToggle) {
-  themeToggle.addEventListener('click', toggleTheme);
-}
-
-applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
-
-// ==========================================================================
-// SCROLL PROGRESS
-// ==========================================================================
-window.addEventListener('scroll', () => {
-  const scrollBar = $('scroll-progress');
-  if (!scrollBar) return;
-
-  const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
-  scrollBar.style.width = scrolled + '%';
-  scrollBar.setAttribute('aria-valuenow', String(Math.round(scrolled)));
-
-  toggleBackToTop(winScroll);
-}, { passive: true });
-
-// ==========================================================================
-// BACK TO TOP
-// ==========================================================================
-const backToTopBtn = $('backToTop');
-
-function toggleBackToTop(scrollY) {
-  if (!backToTopBtn) return;
-  backToTopBtn.classList.toggle('visible', scrollY > 480);
-}
-
-if (backToTopBtn) {
-  backToTopBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  navLinks.forEach(function (link) {
+    var sec = document.getElementById(link.getAttribute("data-section"));
+    if (sec) sections.push({ id: sec.id, el: sec });
   });
-}
 
-// ==========================================================================
-// SCROLLSPY (highlights the current section in both navs)
-// ==========================================================================
-function initScrollSpy() {
-  const sections = ['about', 'skills', 'projects', 'contact']
-    .map(id => $(id))
-    .filter(Boolean);
+  /* one scroll handler instead of three — keeps things smooth */
+  var scrollTicking = false;
+  function onScroll() {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(function () {
+      var y = window.scrollY;
 
-  const navLinks = document.querySelectorAll('[data-section]');
-  if (!sections.length || !navLinks.length) return;
+      if (header) header.classList.toggle("scrolled", y > 12);
+      if (backToTop) backToTop.classList.toggle("visible", y > 600);
 
-  const setActive = id => {
-    navLinks.forEach(link => {
-      link.classList.toggle('active', link.dataset.section === id);
+      var pos = y + window.innerHeight * 0.35;
+      var current = null;
+      sections.forEach(function (s) {
+        if (s.el.offsetTop <= pos) current = s.id;
+      });
+      navLinks.forEach(function (l) {
+        l.classList.toggle("active", l.getAttribute("data-section") === current);
+      });
+
+      scrollTicking = false;
     });
-  };
+  }
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) setActive(entry.target.id);
-      });
-    },
-    { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
-  );
+  /* mobile menu */
+  var navToggle = document.getElementById("navToggle");
+  var mobileNav = document.getElementById("mobileNav");
+  var mobileBackdrop = document.getElementById("mobileBackdrop");
 
-  sections.forEach(section => observer.observe(section));
-}
-
-// ==========================================================================
-// COPY EMAIL & REPO URLS
-// ==========================================================================
-function copyEmail() {
-  if (!navigator.clipboard) {
-    showToast('Clipboard not supported in this browser');
-    return;
+  function openMobileNav() {
+    mobileNav.classList.add("open");
+    mobileBackdrop.classList.add("open");
+    navToggle.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
   }
 
-  navigator.clipboard.writeText(EMAIL).then(() => {
-    showToast('Email copied to clipboard ✓');
-    const detail = $('email-detail');
-    if (detail) {
-      const original = EMAIL;
-      detail.textContent = 'Copied to clipboard! ✓';
-      detail.style.color = 'var(--accent)';
-      setTimeout(() => {
-        detail.textContent = original;
-        detail.style.color = '';
-      }, 2500);
-    }
-  }).catch(() => {
-    showToast('Copy failed — select manually');
-  });
-}
-
-function initCopyButtons() {
-  document.querySelectorAll('.repo-copy').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const url = btn.getAttribute('data-copy');
-      if (!url || !navigator.clipboard) return;
-      navigator.clipboard.writeText(url).then(() => {
-        showToast('Clone URL copied ✓');
-      });
-    });
-  });
-}
-
-// ==========================================================================
-// SHARE BUTTON
-// ==========================================================================
-function initShareButton() {
-  const btn = $('shareBtn');
-  if (!btn) return;
-
-  btn.addEventListener('click', async () => {
-    const shareData = {
-      title: document.title,
-      text: 'Check out this developer portfolio',
-      url: window.location.href
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        // user cancelled the share sheet — no action needed
-      }
-      return;
-    }
-
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        showToast('Link copied to clipboard ✓');
-      });
-    }
-  });
-}
-
-// ==========================================================================
-// PROJECT FILTER
-// ==========================================================================
-function initProjectFilter() {
-  const buttons = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.project-card');
-  const emptyMsg = $('filterEmpty');
-  if (!buttons.length || !cards.length) return;
-
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const filter = btn.dataset.filter;
-      let visibleCount = 0;
-
-      cards.forEach(card => {
-        const matches = filter === 'all' || card.dataset.tag === filter;
-        card.classList.toggle('hidden-card', !matches);
-        if (matches) visibleCount++;
-      });
-
-      if (emptyMsg) emptyMsg.hidden = visibleCount > 0;
-    });
-  });
-}
-
-// ==========================================================================
-// SKILL BARS (animate width when scrolled into view)
-// ==========================================================================
-function initSkillBars() {
-  const bars = document.querySelectorAll('.skill-bar');
-  if (!bars.length) return;
-
-  if (prefersReducedMotion()) {
-    bars.forEach(bar => {
-      const fill = bar.querySelector('.bar-fill');
-      if (fill) fill.style.width = `${bar.dataset.level}%`;
-    });
-    return;
+  function closeMobileNav() {
+    mobileNav.classList.remove("open");
+    mobileBackdrop.classList.remove("open");
+    navToggle.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
   }
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const fill = entry.target.querySelector('.bar-fill');
-        if (fill) fill.style.width = `${entry.target.dataset.level}%`;
-        observer.unobserve(entry.target);
-      });
-    },
-    { threshold: 0.4 }
-  );
-
-  bars.forEach(bar => observer.observe(bar));
-}
-
-// ==========================================================================
-// CONTACT FORM (AJAX submit via FormSubmit — no page reload)
-// ==========================================================================
-function initContactForm() {
-  const form = $('contactForm');
-  const note = $('formNote');
-  const submitBtn = $('contactSubmit');
-  if (!form) return;
-
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    if (!note || !submitBtn) return;
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
-    note.textContent = '';
-    note.classList.remove('success', 'error');
-
-    try {
-      const formData = new FormData(form);
-      const res = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: formData
-      });
-
-      if (!res.ok) throw new Error('Request failed');
-
-      note.textContent = 'Message sent — thanks, I\u2019ll reply soon ✓';
-      note.classList.add('success');
-      form.reset();
-      showToast('Message sent ✓');
-    } catch (err) {
-      note.textContent = 'Could not send — email me directly at ' + EMAIL;
-      note.classList.add('error');
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Send Message';
-    }
+  if (navToggle) {
+    navToggle.addEventListener("click", function () {
+      var open = navToggle.getAttribute("aria-expanded") === "true";
+      open ? closeMobileNav() : openMobileNav();
+    });
+  }
+  if (mobileBackdrop) mobileBackdrop.addEventListener("click", closeMobileNav);
+  document.querySelectorAll("#mobileNav a").forEach(function (a) {
+    a.addEventListener("click", closeMobileNav);
   });
-}
-
-// ==========================================================================
-// LIVE APIS
-// ==========================================================================
-function updateChessRatingUI(rating) {
-  chessRating = rating;
-  ['live-chess-rating', 'live-chess-rating-2'].forEach(id => {
-    const el = $(id);
-    if (el) el.textContent = rating;
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeMobileNav();
   });
-}
 
-function fetchChessRating() {
-  fetch(`https://api.chess.com/pub/player/${CHESS_USER}/stats`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.chess_rapid?.last?.rating) {
-        updateChessRatingUI(String(data.chess_rapid.last.rating));
+  /* typing line in the hero */
+  var typingEl = document.getElementById("typingText");
+  var phrases = ["Python Developer", "Front-End Developer", "Problem Solver", "Chess Player", "Student"];
+
+  if (typingEl && !reduceMotion) {
+    var pIndex = 0;
+    var charIndex = phrases[0].length;
+    var deleting = false;
+    typingEl.textContent = phrases[0];
+
+    function tick() {
+      var current = phrases[pIndex];
+      if (!deleting) {
+        charIndex++;
+        if (charIndex > current.length) {
+          deleting = true;
+          setTimeout(tick, 1400);
+          return;
+        }
       } else {
-        updateChessRatingUI('N/A');
+        charIndex--;
+        if (charIndex < 0) {
+          deleting = false;
+          pIndex = (pIndex + 1) % phrases.length;
+          charIndex = 0;
+          setTimeout(tick, 350);
+          return;
+        }
       }
-    })
-    .catch(() => updateChessRatingUI('Offline'));
-}
-
-function fetchGitHubStats() {
-  const el = $('live-github-repos');
-  if (!el) return;
-
-  fetch(`https://api.github.com/users/${GITHUB_USER}`)
-    .then(res => res.json())
-    .then(data => {
-      el.textContent = data.public_repos ?? '—';
-    })
-    .catch(() => {
-      el.textContent = '—';
-    });
-}
-
-// ==========================================================================
-// SESSION UPTIME (honest, real — time since this page load, not fake stats)
-// ==========================================================================
-function initUptime() {
-  const el = $('session-uptime');
-  if (!el) return;
-
-  setInterval(() => {
-    const seconds = Math.floor((Date.now() - pageLoadTime) / 1000);
-    if (seconds < 60) {
-      el.textContent = `${seconds}s`;
-    } else {
-      const mins = Math.floor(seconds / 60);
-      const secs = seconds % 60;
-      el.textContent = `${mins}m ${secs}s`;
+      typingEl.textContent = phrases[pIndex].slice(0, charIndex);
+      setTimeout(tick, deleting ? 40 : 80);
     }
-  }, 1000);
-}
-
-// ==========================================================================
-// SCROLL REVEAL
-// ==========================================================================
-function initScrollReveal() {
-  const revealEls = document.querySelectorAll('.reveal');
-  if (!revealEls.length) return;
-
-  if (prefersReducedMotion()) {
-    revealEls.forEach(el => el.classList.add('visible'));
-    return;
+    setTimeout(tick, 1400);
+  } else if (typingEl) {
+    typingEl.textContent = phrases[0];
   }
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
+  /* fade sections in as you scroll */
+  var revealEls = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
         }
       });
-    },
-    { threshold: 0.12 }
-  );
-
-  revealEls.forEach(el => observer.observe(el));
-}
-
-// ==========================================================================
-// CURSOR GLOW (rAF-throttled + transform-only, avoids layout thrashing)
-// ==========================================================================
-function initCursorGlow() {
-  const glow = $('cursor-glow');
-  if (!glow || prefersReducedMotion() || window.matchMedia('(hover: none)').matches) return;
-
-  let targetX = window.innerWidth / 2;
-  let targetY = window.innerHeight / 2;
-  let ticking = false;
-
-  function render() {
-    glow.style.transform = `translate3d(${targetX - 210}px, ${targetY - 210}px, 0)`;
-    ticking = false;
+    }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
-  window.addEventListener('mousemove', e => {
-    targetX = e.clientX;
-    targetY = e.clientY;
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(render);
-    }
-  }, { passive: true });
-}
+  /* project cards — click to expand description */
+  document.querySelectorAll("[data-project]").forEach(function (card) {
+    var trigger = card.querySelector(".project-trigger");
+    var panel = card.querySelector(".project-panel");
+    if (!trigger || !panel) return;
 
-// ==========================================================================
-// COMMAND PALETTE
-// ==========================================================================
-const palette = $('command-palette');
-const paletteInput = $('palette-input');
-const paletteList = $('palette-list');
+    trigger.addEventListener("click", function () {
+      var open = card.classList.contains("is-open");
 
-const commands = [
-  { label: 'Go to About', action: () => scrollToSection('#about'), keys: 'about' },
-  { label: 'Go to Skills', action: () => scrollToSection('#skills'), keys: 'skills stack' },
-  { label: 'Go to Projects', action: () => scrollToSection('#projects'), keys: 'projects' },
-  { label: 'Go to Contact', action: () => scrollToSection('#contact'), keys: 'contact' },
-  { label: 'Toggle Theme', action: toggleTheme, keys: 'theme dark light' },
-  { label: 'Copy Email', action: copyEmail, keys: 'email copy' },
-  {
-    label: 'Open GitHub',
-    action: () => window.open(`https://github.com/${GITHUB_USER}`, '_blank'),
-    keys: 'github'
-  },
-  { label: 'Open Terminal', action: openTerminal, keys: 'terminal sudo' },
-  { label: 'Matrix Rain', action: startMatrixRain, keys: 'matrix rain' }
-];
+      document.querySelectorAll("[data-project].is-open").forEach(function (other) {
+        if (other === card) return;
+        other.classList.remove("is-open");
+        var t = other.querySelector(".project-trigger");
+        var p = other.querySelector(".project-panel");
+        if (t) t.setAttribute("aria-expanded", "false");
+        if (p) p.hidden = true;
+      });
 
-function scrollToSection(selector) {
-  closeCommandPalette();
-  document.querySelector(selector)?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
-}
+      card.classList.toggle("is-open", !open);
+      trigger.setAttribute("aria-expanded", String(!open));
+      trigger.setAttribute("data-cursor", open ? "View" : "Close");
+      panel.hidden = open;
+    });
+  });
 
-function renderPaletteItems(filter = '') {
-  if (!paletteList) return;
-  const q = filter.trim().toLowerCase();
-  const filtered = commands.filter(
-    cmd => cmd.label.toLowerCase().includes(q) || cmd.keys.includes(q)
-  );
+  /* toast helper */
+  var toast = document.getElementById("toast");
+  var toastTimer;
+  function showToast(msg) {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2600);
+  }
 
-  paletteList.innerHTML = filtered
-    .map(
-      (cmd, i) =>
-        `<li role="option" aria-selected="${i === 0}" data-index="${i}" class="${i === 0 ? 'active' : ''}">${escapeHtml(cmd.label)}<span>↵</span></li>`
-    )
-    .join('');
-
-  paletteList._filtered = filtered;
-}
-
-function openCommandPalette() {
-  if (!palette || !paletteInput) return;
-  palette.setAttribute('aria-hidden', 'false');
-  paletteInput.value = '';
-  renderPaletteItems();
-  paletteInput.focus();
-  setBodyScrollLocked(true);
-}
-
-function closeCommandPalette() {
-  if (!palette) return;
-  palette.setAttribute('aria-hidden', 'true');
-  setBodyScrollLocked(false);
-}
-
-const cmdHint = $('cmdHint');
-if (cmdHint) {
-  cmdHint.addEventListener('click', openCommandPalette);
-}
-
-if (paletteInput) {
-  paletteInput.addEventListener('input', () => renderPaletteItems(paletteInput.value));
-
-  paletteInput.addEventListener('keydown', e => {
-    const items = paletteList ? paletteList.querySelectorAll('li') : [];
-    const active = paletteList ? paletteList.querySelector('li.active') : null;
-    let index = active ? [...items].indexOf(active) : 0;
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      index = Math.min(index + 1, items.length - 1);
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      index = Math.max(index - 1, 0);
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      const cmd = paletteList?._filtered?.[index];
-      if (cmd) {
-        cmd.action();
-        closeCommandPalette();
+  var copyBtn = document.getElementById("copyEmailBtn");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      var email = "salupghimire10@gmail.com";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(function () {
+          showToast("Email copied");
+        }).catch(function () {
+          showToast(email);
+        });
+      } else {
+        showToast(email);
       }
-      return;
-    } else if (e.key === 'Escape') {
-      closeCommandPalette();
-      return;
-    } else if (e.key === 'Tab') {
-      // simple focus trap: keep focus inside the palette panel
+    });
+  }
+
+  /* contact form */
+  var form = document.getElementById("contactForm");
+  var formNote = document.getElementById("formNote");
+  var submitBtn = document.getElementById("contactSubmit");
+
+  function setFieldError(id, message) {
+    var input = document.getElementById(id);
+    var errorEl = document.getElementById(id + "-error");
+    if (!input || !errorEl) return;
+    errorEl.textContent = message || "";
+    input.setAttribute("aria-invalid", message ? "true" : "false");
+  }
+
+  function validateForm() {
+    var name = document.getElementById("name");
+    var email = document.getElementById("email");
+    var message = document.getElementById("message");
+    var valid = true;
+
+    if (!name.value.trim()) {
+      setFieldError("name", "Please enter your name.");
+      valid = false;
+    } else setFieldError("name", "");
+
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.value.trim() || !emailPattern.test(email.value.trim())) {
+      setFieldError("email", "Please enter a valid email.");
+      valid = false;
+    } else setFieldError("email", "");
+
+    if (!message.value.trim() || message.value.trim().length < 5) {
+      setFieldError("message", "Message should be at least a few words.");
+      valid = false;
+    } else setFieldError("message", "");
+
+    return valid;
+  }
+
+  if (form) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
-      paletteInput.focus();
-      return;
-    } else {
-      return;
-    }
+      if (!validateForm()) {
+        formNote.textContent = "Please fix the highlighted fields.";
+        formNote.classList.add("error");
+        return;
+      }
 
-    items.forEach((li, i) => {
-      li.classList.toggle('active', i === index);
-      li.setAttribute('aria-selected', String(i === index));
+      formNote.classList.remove("error");
+      formNote.textContent = "Sending...";
+      submitBtn.disabled = true;
+
+      var action = form.getAttribute("action").replace("formsubmit.co/", "formsubmit.co/ajax/");
+      fetch(action, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: new FormData(form)
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("fail");
+          return res.json();
+        })
+        .then(function () {
+          formNote.textContent = "Message sent — I'll get back to you soon.";
+          form.reset();
+        })
+        .catch(function () {
+          formNote.textContent = "Submitting...";
+          form.submit();
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+        });
     });
-  });
-}
+  }
 
-if (paletteList) {
-  paletteList.addEventListener('click', e => {
-    const li = e.target.closest('li');
-    if (!li) return;
-    const index = Number(li.dataset.index);
-    const cmd = paletteList._filtered?.[index];
-    if (cmd) {
-      cmd.action();
-      closeCommandPalette();
+  /* custom cursor — magnetic, labeled, only runs on desktop with a mouse */
+  if (finePointer && !reduceMotion) {
+    var body = document.body;
+    var dot = document.getElementById("cursor-dot");
+    var ring = document.getElementById("cursor-ring");
+    var label = document.getElementById("cursor-label");
+
+    var mouseX = -100, mouseY = -100;   // raw mouse position
+    var targetX = -100, targetY = -100; // pull-adjusted target (mouse, or magnetized toward a target element)
+    var dotX = -100, dotY = -100;
+    var ringX = -100, ringY = -100;
+
+    var visible = false;
+    var animating = false;
+    var magnetEl = null; // element currently exerting magnetic pull
+
+    var MAGNET_STRENGTH = 0.4;   // how strongly the cursor snaps toward a magnet target
+    var DOT_LERP = 0.35;         // dot smoothing (fast, still feels responsive)
+    var RING_LERP = 0.14;        // ring smoothing (slower, trailing)
+
+    body.classList.add("has-custom-cursor");
+
+    function setVisible(show) {
+      visible = show;
+      body.classList.toggle("is-cursor-visible", show);
     }
-  });
-}
 
-// ==========================================================================
-// TERMINAL EASTER EGG
-// ==========================================================================
-let keyBuffer = ''; // tracks recent keystrokes globally to detect typed "sudo"/"matrix"
-const terminalOverlay = $('terminal-overlay');
-const terminalInput = $('terminal-input');
-const terminalOutput = $('terminal-output');
-
-function getNeofetchAscii() {
-  return `
-  ███████╗ █████╗ ██╗     ██╗   ██╗██████╗
-  ██╔════╝██╔══██╗██║     ██║   ██║██╔══██╗
-  ███████╗███████║██║     ██║   ██║██████╔╝
-  ╚════██║██╔══██║██║     ██║   ██║██╔═══╝
-  ███████║██║  ██║███████╗╚██████╔╝██║
-  ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝
-  OS: salupOS 2.0 · Shell: portfolio-sh
-  Theme: ${document.documentElement.getAttribute('data-theme') || 'dark'}
-  Chess Rapid: ${chessRating}
-  Email: ${EMAIL}
-`.trim();
-}
-
-function openTerminal() {
-  if (!terminalOverlay || !terminalInput) return;
-  terminalOverlay.setAttribute('aria-hidden', 'false');
-  terminalInput.focus();
-  setBodyScrollLocked(true);
-}
-
-function closeTerminal() {
-  if (!terminalOverlay) return;
-  terminalOverlay.setAttribute('aria-hidden', 'true');
-  setBodyScrollLocked(false);
-}
-
-function appendTerminal(html) {
-  if (!terminalOutput) return;
-  terminalOutput.insertAdjacentHTML('beforeend', html);
-  terminalOutput.scrollTop = terminalOutput.scrollHeight;
-}
-
-window.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    closeMobileNav();
-    closeTerminal();
-    closeCommandPalette();
-    return;
-  }
-
-  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-    e.preventDefault();
-    const isOpen = palette?.getAttribute('aria-hidden') === 'false';
-    if (isOpen) closeCommandPalette();
-    else openCommandPalette();
-    return;
-  }
-
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-  keyBuffer += e.key.toLowerCase();
-  if (keyBuffer.length > 12) keyBuffer = keyBuffer.slice(-12);
-
-  if (keyBuffer.includes('sudo')) {
-    openTerminal();
-    keyBuffer = '';
-  } else if (keyBuffer.includes('matrix')) {
-    startMatrixRain();
-    keyBuffer = '';
-  }
-});
-
-if (terminalInput) {
-  terminalInput.addEventListener('keydown', e => {
-    if (e.key !== 'Enter') return;
-
-    const command = terminalInput.value.trim().toLowerCase();
-    terminalInput.value = '';
-    appendTerminal(`<p><span class="prompt">$</span> ${escapeHtml(command)}</p>`);
-
-    switch (command) {
-      case 'help':
-        appendTerminal(
-          `<p>Commands: <span class="term-highlight">about</span>, <span class="term-highlight">projects</span>, <span class="term-highlight">theme</span>, <span class="term-highlight">email</span>, <span class="term-highlight">chess</span>, <span class="term-highlight">neofetch</span>, <span class="term-highlight">matrix</span>, <span class="term-highlight">clear</span>, <span class="term-highlight">exit</span></p>`
-        );
-        break;
-      case 'about':
-        appendTerminal('<p>Salup Ghimire — Developer, Student, Chess Player.</p>');
-        break;
-      case 'projects':
-        appendTerminal('<p>2 active modules: portfolio-v2, chess-tools</p>');
-        break;
-      case 'theme':
-        toggleTheme();
-        appendTerminal(
-          `<p>Theme switched to ${document.documentElement.getAttribute('data-theme')}.</p>`
-        );
-        break;
-      case 'email':
-        copyEmail();
-        appendTerminal('<p>Email copied to clipboard.</p>');
-        break;
-      case 'chess':
-        appendTerminal(`<p>Rapid rating: ${escapeHtml(chessRating)}</p>`);
-        break;
-      case 'neofetch':
-        appendTerminal(`<pre class="terminal-ascii">${escapeHtml(getNeofetchAscii())}</pre>`);
-        break;
-      case 'matrix':
-        appendTerminal('<p>Launching matrix rain...</p>');
-        startMatrixRain();
-        break;
-      case 'clear':
-        terminalOutput.innerHTML = '';
-        break;
-      case 'exit':
-        closeTerminal();
-        break;
-      default:
-        appendTerminal(
-          `<p>Command not found: ${escapeHtml(command)}. Type 'help'.</p>`
-        );
+    function recomputeTarget() {
+      if (magnetEl) {
+        var rect = magnetEl.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        targetX = mouseX + (cx - mouseX) * MAGNET_STRENGTH;
+        targetY = mouseY + (cy - mouseY) * MAGNET_STRENGTH;
+      } else {
+        targetX = mouseX;
+        targetY = mouseY;
+      }
     }
-  });
-}
 
-// ==========================================================================
-// MATRIX RAIN EASTER EGG
-// ==========================================================================
-let matrixAnimationId = null;
+    function animate() {
+      dotX += (targetX - dotX) * DOT_LERP;
+      dotY += (targetY - dotY) * DOT_LERP;
+      ringX += (targetX - ringX) * RING_LERP;
+      ringY += (targetY - ringY) * RING_LERP;
 
-function startMatrixRain() {
-  if (prefersReducedMotion()) {
-    showToast('Matrix rain skipped (reduced motion is on)');
-    return;
-  }
+      if (dot) dot.style.transform = "translate(" + dotX + "px," + dotY + "px) translate(-50%,-50%)";
+      if (ring) ring.style.transform = "translate(" + ringX + "px," + ringY + "px) translate(-50%,-50%)";
+      if (label) label.style.transform = "translate(" + ringX + "px," + (ringY + 40) + "px) translate(-50%,-50%)";
 
-  const canvas = $('matrix-canvas');
-  if (!canvas) return;
+      var settled = Math.abs(targetX - dotX) < 0.4 && Math.abs(targetY - dotY) < 0.4 &&
+        Math.abs(targetX - ringX) < 0.4 && Math.abs(targetY - ringY) < 0.4;
 
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  canvas.classList.add('active');
+      if (visible || !settled) {
+        requestAnimationFrame(animate);
+      } else {
+        animating = false;
+      }
+    }
 
-  const chars = 'アイウエオカキクケコサシスセソ01';
-  const fontSize = 16;
-  const columns = Math.floor(canvas.width / fontSize);
-  const drops = new Array(columns).fill(1);
+    function startLoop() {
+      if (!animating) {
+        animating = true;
+        requestAnimationFrame(animate);
+      }
+    }
 
-  function draw() {
-    ctx.fillStyle = 'rgba(3, 7, 18, 0.08)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#22c55e';
-    ctx.font = `${fontSize}px monospace`;
+    window.addEventListener("mousemove", function (e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      if (!visible) setVisible(true);
+      recomputeTarget();
+      startLoop();
+    }, { passive: true });
 
-    drops.forEach((y, i) => {
-      const char = chars[Math.floor(Math.random() * chars.length)];
-      ctx.fillText(char, i * fontSize, y * fontSize);
-      drops[i] = y * fontSize > canvas.height && Math.random() > 0.975 ? 0 : y + 1;
+    window.addEventListener("mouseleave", function () { setVisible(false); });
+    window.addEventListener("mouseenter", function () { setVisible(true); });
+
+    window.addEventListener("mousedown", function (e) {
+      dot && dot.classList.add("is-click");
+      ring && ring.classList.add("is-click");
+
+      var ripple = document.createElement("span");
+      ripple.className = "cursor-ripple";
+      ripple.style.transform = "translate(" + e.clientX + "px," + e.clientY + "px) translate(-50%,-50%)";
+      document.body.appendChild(ripple);
+      ripple.addEventListener("animationend", function () { ripple.remove(); });
+    });
+    window.addEventListener("mouseup", function () {
+      dot && dot.classList.remove("is-click");
+      ring && ring.classList.remove("is-click");
     });
 
-    matrixAnimationId = requestAnimationFrame(draw);
+    function showLabel(text) {
+      if (!label) return;
+      label.textContent = text;
+      label.classList.add("show");
+      ring && ring.classList.add("is-label");
+    }
+    function hideLabel() {
+      if (!label) return;
+      label.classList.remove("show");
+      ring && ring.classList.remove("is-label");
+    }
+
+    var magnetSelector = ".btn, .social-icon-link, .hero-social a, .footer-social a, .contact-card, .profile-icons a, .back-to-top, .logo";
+
+    document.querySelectorAll("a, button, input, textarea, .project-trigger").forEach(function (el) {
+      el.addEventListener("mouseenter", function () {
+        dot && dot.classList.add("is-hover");
+        ring && ring.classList.add("is-hover");
+
+        if (el.matches(magnetSelector)) {
+          magnetEl = el;
+        }
+        var cursorText = el.getAttribute("data-cursor");
+        if (cursorText) showLabel(cursorText);
+      });
+      el.addEventListener("mousemove", function (e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        recomputeTarget();
+      });
+      el.addEventListener("mouseleave", function () {
+        dot && dot.classList.remove("is-hover");
+        ring && ring.classList.remove("is-hover");
+        if (magnetEl === el) magnetEl = null;
+        hideLabel();
+      });
+    });
   }
 
-  draw();
-  showToast('Matrix rain — click anywhere to stop');
+  /* anchor links — offset for the fixed header */
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      var id = link.getAttribute("href");
+      if (id.length < 2) return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      var headerH = header ? header.offsetHeight : 0;
+      var top = target.getBoundingClientRect().top + window.scrollY - headerH - 12;
+      window.scrollTo({ top: top, behavior: reduceMotion ? "auto" : "smooth" });
+      history.pushState(null, "", id);
+    });
+  });
 
-  function stop() {
-    cancelAnimationFrame(matrixAnimationId);
-    canvas.classList.remove('active');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    window.removeEventListener('click', stop);
-    window.removeEventListener('keydown', stop);
+  if (backToTop) {
+    backToTop.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    });
   }
 
-  setTimeout(stop, 6000);
-  window.addEventListener('click', stop, { once: true });
-  window.addEventListener('keydown', stop, { once: true });
-}
-
-// ==========================================================================
-// PAGE INIT (safe — every line checks elements first)
-// ==========================================================================
-function initPage() {
-  const yearEl = $('year');
-  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-
-  initScrollReveal();
-  initScrollSpy();
-  initCursorGlow();
-  initCopyButtons();
-  initShareButton();
-  initProjectFilter();
-  initSkillBars();
-  initContactForm();
-  initUptime();
-  fetchChessRating();
-  fetchGitHubStats();
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initPage);
-} else {
-  initPage();
-}
-
-window.addEventListener('resize', () => {
-  const canvas = $('matrix-canvas');
-  if (canvas && canvas.classList.contains('active')) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  /* live chess.com rapid rating — fails silently if the API is unreachable */
+  var ratingBadge = document.getElementById("chessRatingBadge");
+  var ratingValue = document.getElementById("chessRating");
+  if (ratingBadge && ratingValue && "fetch" in window) {
+    fetch("https://api.chess.com/pub/player/salup_ghimire/stats")
+      .then(function (res) {
+        if (!res.ok) throw new Error("bad response");
+        return res.json();
+      })
+      .then(function (data) {
+        var rapid = data && data.chess_rapid && data.chess_rapid.last;
+        if (rapid && rapid.rating) {
+          ratingValue.textContent = rapid.rating;
+          ratingBadge.hidden = false;
+        }
+      })
+      .catch(function () {
+        /* keep the badge hidden — no rating to show */
+      });
   }
-});
-
-// Expose for inline onclick handlers in HTML
-window.toggleMenu = toggleMenu;
-window.closeMobileNav = closeMobileNav;
-window.copyEmail = copyEmail;
-window.closeTerminal = closeTerminal;
-window.openCommandPalette = openCommandPalette;
-window.closeCommandPalette = closeCommandPalette;
+})();
